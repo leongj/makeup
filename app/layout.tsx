@@ -1,3 +1,4 @@
+import { AppBar } from "@/features/home-page/app-bar";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -20,9 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.className}  antialiased bg-slate-950 text-slate-300`}
+        className={`${poppins.className}  antialiased bg-slate-900 text-slate-300`}
       >
         {children}
+        <AppBar />
       </body>
     </html>
   );
