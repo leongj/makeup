@@ -15,7 +15,7 @@ export const AppBar = () => {
         animate={{ opacity: 1, y: 0 }}
         className="overflow-hidden flex flex-col gap-2 shadow-slate-200 bg-slate-50/80 backdrop-blur-sm rounded-3xl p-2 px-3 border-2 border-slate-200"
       >
-        <AnimatePresence> {section}</AnimatePresence>
+        <AnimatePresence mode="popLayout"> {section}</AnimatePresence>
 
         <div className="flex gap-2 items-center justify-center">
           <AppBarButton>

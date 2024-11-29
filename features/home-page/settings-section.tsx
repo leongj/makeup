@@ -15,7 +15,14 @@ export const SettingsSection = () => {
     <motion.div
       initial={{ opacity: 0, y: 45 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, height: 0, transition: { duration: 0.2 } }}
+      exit={{
+        opacity: 0,
+        height: 0,
+        width: 0,
+        transition: {
+          type: "linear",
+        },
+      }}
       className="flex flex-col gap-2 overflow-hidden"
     >
       <div className="flex justify-end py-2">
