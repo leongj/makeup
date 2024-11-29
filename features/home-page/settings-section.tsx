@@ -13,14 +13,16 @@ export const SettingsSection = () => {
   const [localSystem, setLocalSystem] = useState(system);
   return (
     <motion.div
+      layout
       initial={{ opacity: 0, y: 45 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{
         opacity: 0,
         height: 0,
         width: 0,
+        y: 50,
         transition: {
-          type: "linear",
+          type: "easeInOut",
         },
       }}
       className="flex flex-col gap-2 overflow-hidden"
@@ -79,7 +81,7 @@ export const ActionButton = ({
 }: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
-      className="flex gap-2 text-slate-500 items-center hover:text-violet-500 border-slate-400 p-2 rounded-md border"
+      className="flex gap-2  items-center text-violet-500 hover:text-violet-500 border-slate-400 p-2 rounded-md border"
       {...props}
     >
       {children}
