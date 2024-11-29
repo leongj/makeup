@@ -1,7 +1,12 @@
+"use client";
 import { motion } from "framer-motion";
-import { Save, X } from "lucide-react";
+import { Eraser, Save, Undo2, X } from "lucide-react";
 import { ButtonHTMLAttributes, useState } from "react";
-import { updateSystemPrompt, useAppStore } from "./store";
+import {
+  DescriptionSystemPrompt,
+  updateSystemPrompt,
+  useAppStore,
+} from "./store";
 
 export const SettingsSection = () => {
   const system = useAppStore((state) => state.imageDescription.system);
@@ -28,11 +33,26 @@ export const SettingsSection = () => {
         onChange={(e) => {
           setLocalSystem(e.target.value);
         }}
-        defaultValue={system}
+        value={localSystem}
         className="w-[80svw] md:w-[70svw] xl:w-[30svw] p-3 bg-transparent rounded-2xl text-slate-500 resize-none focus:bg-slate-100  focus:ring-0 focus:ring-slate-500 focus:outline-none"
         placeholder="System prompt.."
       />
-      <div className="py-2">
+      <div className="py-2 flex gap-2 justify-end">
+        {" "}
+        <ActionButton
+          onClick={() => {
+            setLocalSystem(DescriptionSystemPrompt);
+          }}
+        >
+          <Undo2 size={18} /> <span>Restore</span>
+        </ActionButton>
+        <ActionButton
+          onClick={() => {
+            setLocalSystem("");
+          }}
+        >
+          <Eraser size={18} /> <span>Clear</span>
+        </ActionButton>
         <ActionButton
           onClick={() => {
             updateSystemPrompt(localSystem);

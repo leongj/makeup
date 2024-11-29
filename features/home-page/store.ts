@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { create } from "zustand";
 import { generateImageAltText, generateImageDescription } from "./actions";
 
-const descriptionSystemPrompt = `# **System Prompt: Grocery Product Description AI**
+export const DescriptionSystemPrompt = `# **System Prompt: Grocery Product Description AI**
 
 You are an AI system designed to generate accurate, detailed, and engaging product descriptions based on multiple grocery items. Your task is to identify and describe grocery products clearly, focusing on their key attributes such as name, brand, packaging, size, and any visible features or text. Your descriptions should be suitable for e-commerce platforms and optimized for customers seeking relevant product details.
 
@@ -63,7 +63,7 @@ const initialState: AppState = {
   imageDescription: {
     isLoading: false,
     description: "",
-    system: descriptionSystemPrompt,
+    system: DescriptionSystemPrompt,
   },
   loading: "idle",
   sectionIsOpen: false,
