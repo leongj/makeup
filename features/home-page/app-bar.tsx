@@ -1,7 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
-import { PropsWithChildren } from "react";
-import { CameraIcon, ImageIcon, SettingsIcon } from "./app-icons";
+import { ButtonHTMLAttributes } from "react";
+import { CameraIcon, SettingsIcon } from "./app-icons";
+import { UploadImage } from "./upload-file";
 
 export const AppBar = () => {
   return (
@@ -14,9 +15,7 @@ export const AppBar = () => {
         <AppBarButton>
           <CameraIcon />
         </AppBarButton>
-        <AppBarButton>
-          <ImageIcon />
-        </AppBarButton>
+        <UploadImage />
         <AppBarButton>
           <SettingsIcon />
         </AppBarButton>
@@ -25,12 +24,16 @@ export const AppBar = () => {
   );
 };
 
-const AppBarButton = ({ children }: PropsWithChildren) => {
+export const AppBarButton = ({
+  children,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <motion.button
       initial={{ opacity: 0, y: 45 }}
       animate={{ opacity: 1, y: 0 }}
       className="overflow-hidden group rounded-2xl hover:bg-slate-800/45 transition-all duration-500 outline-none focus:ring-2 ring-violet-500"
+      {...props}
     >
       <span className="block p-3 group-hover:scale-125 transform transition-transform duration-300">
         {children}
