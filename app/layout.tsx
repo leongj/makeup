@@ -1,3 +1,4 @@
+import { AI } from "@/features/home-page/ai-context";
 import { AppBar } from "@/features/home-page/app-bar";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
@@ -19,13 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${poppins.className}  antialiased bg-slate-100 text-slate-300`}
-      >
-        {children}
-        <AppBar />
-      </body>
-    </html>
+    <AI>
+      <html lang="en">
+        <body
+          className={`${poppins.className}  antialiased bg-slate-100 text-slate-300`}
+        >
+          {children}
+          <AppBar />
+        </body>
+      </html>
+    </AI>
   );
 }

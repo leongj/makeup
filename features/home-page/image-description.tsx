@@ -1,12 +1,10 @@
 "use client";
 
-import { Loading } from "../common/loading";
 import { useAppStore } from "./store";
 
 export const ImageDescription = () => {
   const images = useAppStore((state) => state.images);
   const imageDescription = useAppStore((state) => state.imageDescription);
-  const isLoading = useAppStore((state) => state.imageDescription.isLoading);
 
   if (images.length === 0) {
     return null;
@@ -18,7 +16,6 @@ export const ImageDescription = () => {
 
       <div className="container mx-auto max-w-2xl flex flex-col">
         {imageDescription.description}
-        {isLoading && <Loading />}
       </div>
     </div>
   );

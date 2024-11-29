@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { Loading } from "../common/loading";
 import { ImageItemState, useAppStore } from "./store";
 
@@ -40,17 +40,20 @@ export const ImageItem = (props: { image: ImageItemState }) => {
       >
         <img className="rounded-lg" src={image.url} alt={image.base64} />
       </motion.picture>
-      {image.isLoading ? (
-        <Loading />
-      ) : (
-        <motion.p
-          className="text-slate-500"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          {image.result}
-        </motion.p>
-      )}
+      <AnimatePresence mode="popLayout">
+        {image.isLoading ? (
+          <Loading />
+        ) : (
+          <motion.p
+            layout
+            className="text-slate-500"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+          >
+            {image.result}
+          </motion.p>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

@@ -1,5 +1,5 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { ButtonHTMLAttributes } from "react";
 import { cn } from "../common/util";
 import { CameraIcon, SettingsIcon } from "./app-icons";

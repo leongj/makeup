@@ -1,12 +1,14 @@
-import { motion } from "framer-motion";
+"use client";
+
+import { motion } from "motion/react";
 
 export const Loading = () => {
   return (
-    <motion.span className="flex gap-1 rounded-2xl bg-slate-700 place-self-start p-2">
+    <span className="flex gap-1 rounded-2xl bg-slate-700 place-self-start p-2">
       <LoadingItem delay={0} />
       <LoadingItem delay={0.3} />
       <LoadingItem delay={0.5} />
-    </motion.span>
+    </span>
   );
 };
 

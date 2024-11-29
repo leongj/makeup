@@ -2,6 +2,7 @@
 
 import { CoreMessage, generateText, streamText } from "ai";
 import { createStreamableUI } from "ai/rsc";
+import { Loading } from "../common/loading";
 import { Markdown } from "../common/markdown";
 import { AzureProvider } from "./azure";
 
@@ -61,7 +62,7 @@ interface Props {
 }
 
 export const generateImageDescription = async (props: Props) => {
-  const ui = createStreamableUI();
+  const ui = createStreamableUI(<Loading />);
   const { system, images } = props;
   const messages: Array<CoreMessage> = [
     {
@@ -76,6 +77,7 @@ export const generateImageDescription = async (props: Props) => {
   ];
 
   const triggerAI = async () => {
+    let fullText = "";
     try {
       const azure = AzureProvider();
       const result = streamText({
@@ -83,17 +85,22 @@ export const generateImageDescription = async (props: Props) => {
         model: azure,
         messages: messages,
       });
-      let fullText = "";
+
       for await (const textPart of result.textStream) {
         fullText += textPart;
-        ui.update(<Markdown content={fullText} />);
+        ui.update(
+          <>
+            <Markdown content={fullText} />
+            <Loading />
+          </>
+        );
       }
+
+      ui.done(<Markdown content={fullText} />);
     } catch (error) {
       console.error("Error", error);
-      ui.update(<Markdown content={"Error"} />);
+      ui.done(<Markdown content={"Error"} />);
     }
-
-    ui.done();
   };
 
   triggerAI();

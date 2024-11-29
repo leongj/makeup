@@ -1,6 +1,6 @@
 "use client";
-import { motion } from "framer-motion";
 import { Eraser, Save, Undo2, X } from "lucide-react";
+import { motion } from "motion/react";
 import { ButtonHTMLAttributes, useState } from "react";
 import {
   DescriptionSystemPrompt,
