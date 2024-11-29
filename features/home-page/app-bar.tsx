@@ -10,7 +10,7 @@ export const AppBar = () => {
       <motion.div
         initial={{ opacity: 0, y: 45 }}
         animate={{ opacity: 1, y: 0 }}
-        className="overflow-hidden flex gap-2 bg-slate-900/30 backdrop-blur-2xl rounded-3xl p-2 px-3 border border-slate-700/20 "
+        className="overflow-hidden flex gap-2 shadow-slate-200 bg-slate-50/80 backdrop-blur-sm rounded-3xl p-2 px-3 border-2 border-slate-200"
       >
         <AppBarButton>
           <CameraIcon />
@@ -32,7 +32,7 @@ export const AppBarButton = ({
     <motion.button
       initial={{ opacity: 0, y: 45 }}
       animate={{ opacity: 1, y: 0 }}
-      className="overflow-hidden group rounded-2xl hover:bg-slate-800/45 transition-all duration-500 outline-none focus:ring-2 ring-violet-500"
+      className="overflow-hidden group rounded-2xl hover:bg-violet-400/30 transition-all duration-500 outline-none focus:ring-2 ring-violet-500"
       {...props}
     >
       <span className="block p-3 group-hover:scale-125 transform transition-transform duration-300">

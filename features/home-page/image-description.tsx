@@ -14,7 +14,7 @@ export const ImageDescription = () => {
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <h1 className="text-2xl text-slate-200">Image Description</h1>
+      <h1 className="text-2xl ">Image Description</h1>
 
       <div className="container mx-auto max-w-2xl flex flex-col">
         {imageDescription.description}

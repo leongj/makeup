@@ -13,7 +13,7 @@ export const AltImages = () => {
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <h1 className="text-2xl text-slate-200">Images</h1>
+      <h1 className="text-2xl">Images</h1>
 
       <motion.div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {images.map((file, i) => (
@@ -32,7 +32,7 @@ export const ImageItem = (props: { image: ImageItemState }) => {
       key={image.index}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="bg-slate-800/40 rounded-xl p-6 text-sm flex flex-col gap-5 border border-slate-800  "
+      className="bg-slate-50 rounded-xl p-6 text-sm flex flex-col gap-5 border shadow-md shadow-slate-200"
     >
       <motion.picture
         initial={{ opacity: 0, y: 5 }}
@@ -44,7 +44,7 @@ export const ImageItem = (props: { image: ImageItemState }) => {
         <Loading />
       ) : (
         <motion.p
-          className="text-slate-300"
+          className="text-slate-500"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >

@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.className}  antialiased bg-slate-900 text-slate-300`}
+        className={`${poppins.className}  antialiased bg-slate-100 text-slate-300`}
       >
         {children}
         <AppBar />
