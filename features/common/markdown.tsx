@@ -13,7 +13,7 @@ export const Markdown = (props: Props) => {
   });
 
   return (
-    <div className="prose dark:prose-invert prose-sm">
+    <div className="prose dark:prose-invert">
       {Markdoc.renderers.react(content, React, {
         components: {},
       })}

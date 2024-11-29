@@ -1,6 +1,8 @@
 "use server";
 
-import { generateText } from "ai";
+import { CoreMessage, generateText, streamText } from "ai";
+import { createStreamableUI } from "ai/rsc";
+import { Markdown } from "../common/markdown";
 import { AzureProvider } from "./azure";
 
 const altTextSystemPrompt = `
@@ -37,7 +39,6 @@ export const generateImageAltText = async (base: string) => {
         {
           role: "user",
           content: [
-            { type: "text", text: "What is this image" },
             {
               type: "image",
               image: `data:image/jpeg;base64 ${base}`,
@@ -52,4 +53,50 @@ export const generateImageAltText = async (base: string) => {
     console.error("Error", error);
     return `There was an error`;
   }
+};
+
+interface Props {
+  system: string;
+  images: string[];
+}
+
+export const generateImageDescription = async (props: Props) => {
+  const ui = createStreamableUI();
+  const { system, images } = props;
+  const messages: Array<CoreMessage> = [
+    {
+      role: "user",
+      content: images.map((image) => {
+        return {
+          type: "image",
+          image: `data:image/jpeg;base64 ${image}`,
+        };
+      }),
+    },
+  ];
+
+  const triggerAI = async () => {
+    try {
+      const azure = AzureProvider();
+      const result = streamText({
+        system: system,
+        model: azure,
+        messages: messages,
+      });
+      let fullText = "";
+      for await (const textPart of result.textStream) {
+        fullText += textPart;
+        ui.update(<Markdown content={fullText} />);
+      }
+    } catch (error) {
+      console.error("Error", error);
+      ui.update(<Markdown content={"Error"} />);
+    }
+
+    ui.done();
+  };
+
+  triggerAI();
+
+  return ui.value;
 };

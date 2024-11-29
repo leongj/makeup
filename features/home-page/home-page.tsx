@@ -1,5 +1,5 @@
-import { Markdown } from "../common/markdown";
-import { Images } from "./images";
+import { AltImages } from "./alt-images";
+import { ImageDescription } from "./image-description";
 
 export const HomePage = () => {
   return (
@@ -11,20 +11,8 @@ export const HomePage = () => {
             Generating alt text and descriptions for images using Azure OpenAI
           </h4>
         </div>
-        <Images />
-
-        <div className="flex flex-col gap-2 py-6">
-          <h1 className="text-2xl xl:text-4xl font-semibold text-slate-200">
-            Descriptions
-          </h1>
-          <h4 className="text-sm">
-            Descriptions are generated using Azure OpenAI{" "}
-            <span className="p-[2px] px-2 rounded-full bg-slate-600">
-              GPT-4o
-            </span>
-          </h4>
-        </div>
-        <Markdown content="# Hello" />
+        <AltImages />
+        <ImageDescription />
       </div>
     </div>
   );
