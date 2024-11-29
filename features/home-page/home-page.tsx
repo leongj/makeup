@@ -1,5 +1,5 @@
 import { Markdown } from "../common/markdown";
-import { Images, Loading } from "./images";
+import { Images } from "./images";
 
 export const HomePage = () => {
   return (
@@ -11,7 +11,6 @@ export const HomePage = () => {
             Generating alt text and descriptions for images using Azure OpenAI
           </h4>
         </div>
-        <Loading />
         <Images />
 
         <div className="flex flex-col gap-2 py-6">
