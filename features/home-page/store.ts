@@ -53,6 +53,8 @@ type AppState = {
   images: ImageItemState[];
   imageDescription: ImageDescriptionState;
   loading: "idle" | "pending" | "success" | "error";
+  sectionIsOpen: boolean;
+  section?: ReactNode;
 };
 
 const initialState: AppState = {
@@ -64,6 +66,8 @@ const initialState: AppState = {
     system: descriptionSystemPrompt,
   },
   loading: "idle",
+  sectionIsOpen: false,
+  section: null,
 };
 
 export const useAppStore = create<AppState>(() => initialState);
@@ -73,9 +77,9 @@ export const updateFiles = async (files: FileList) => {
     ...initialState,
     files,
     imageDescription: {
+      ...state.imageDescription,
       description: "",
       isLoading: true,
-      system: state.imageDescription.system,
     },
   }));
 
@@ -90,6 +94,17 @@ export const updateFiles = async (files: FileList) => {
 
 export const updateLoading = (loading: AppState["loading"]) => {
   useAppStore.setState({ loading });
+};
+
+export const updateSection = (section: ReactNode) => {
+  useAppStore.setState({ section });
+};
+
+export const updateSystemPrompt = (system: string) => {
+  useAppStore.setState((state) => ({
+    ...state,
+    imageDescription: { ...state.imageDescription, system },
+  }));
 };
 
 const startGeneratingDescription = async () => {

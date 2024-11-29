@@ -1,24 +1,35 @@
 "use client";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ButtonHTMLAttributes } from "react";
 import { CameraIcon, SettingsIcon } from "./app-icons";
+import { SettingsSection } from "./settings-section";
+import { useAppStore } from "./store";
 import { UploadImage } from "./upload-file";
 
 export const AppBar = () => {
+  const section = useAppStore((state) => state.section);
   return (
     <div className="fixed left-0 bottom-0 w-full flex justify-center p-3  ">
       <motion.div
         initial={{ opacity: 0, y: 45 }}
         animate={{ opacity: 1, y: 0 }}
-        className="overflow-hidden flex gap-2 shadow-slate-200 bg-slate-50/80 backdrop-blur-sm rounded-3xl p-2 px-3 border-2 border-slate-200"
+        className="overflow-hidden flex flex-col gap-2 shadow-slate-200 bg-slate-50/80 backdrop-blur-sm rounded-3xl p-2 px-3 border-2 border-slate-200"
       >
-        <AppBarButton>
-          <CameraIcon />
-        </AppBarButton>
-        <UploadImage />
-        <AppBarButton>
-          <SettingsIcon />
-        </AppBarButton>
+        <AnimatePresence> {section}</AnimatePresence>
+
+        <div className="flex gap-2 items-center justify-center">
+          <AppBarButton>
+            <CameraIcon />
+          </AppBarButton>
+          <UploadImage />
+          <AppBarButton
+            onClick={() => {
+              useAppStore.setState({ section: <SettingsSection /> });
+            }}
+          >
+            <SettingsIcon />
+          </AppBarButton>
+        </div>
       </motion.div>
     </div>
   );
