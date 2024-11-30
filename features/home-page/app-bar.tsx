@@ -55,15 +55,13 @@ export const AppBarButton = ({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
-    <motion.button
-      initial={{ opacity: 0, y: 45 }}
-      animate={{ opacity: 1, y: 0 }}
+    <button
       className="overflow-hidden group rounded-2xl  hover:bg-violet-400/30 transition-all duration-500 outline-none focus:ring-2 ring-violet-500"
       {...props}
     >
       <span className="block p-3 group-hover:scale-125 transform transition-transform duration-300">
         {children}
       </span>
-    </motion.button>
+    </button>
   );
 };
