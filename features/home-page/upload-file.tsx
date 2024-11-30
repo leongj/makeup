@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { AppBarButton } from "./app-bar/app-bar";
+import { AppBarButton } from "../ui/app-bar/app-bar";
 import { ImageIcon } from "./app-bar/app-icons";
 import { updateFiles } from "./store";
 
