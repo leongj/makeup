@@ -2,12 +2,8 @@
 import { Eraser, Save, Undo2, X } from "lucide-react";
 import { motion } from "motion/react";
 import { ButtonHTMLAttributes, useState } from "react";
-import {
-  DescriptionSystemPrompt,
-  updateSection,
-  updateSystemPrompt,
-  useAppStore,
-} from "./store";
+import { DescriptionSystemPrompt } from "../prompts";
+import { updateSection, updateSystemPrompt, useAppStore } from "../store";
 
 export const SettingsSection = () => {
   const system = useAppStore((state) => state.imageDescription.system);
@@ -34,7 +30,7 @@ export const SettingsSection = () => {
             updateSection(null);
           }}
         >
-          <X />
+          <X size={16} />
         </ActionButton>
       </div>
 
@@ -53,14 +49,14 @@ export const SettingsSection = () => {
             setLocalSystem(DescriptionSystemPrompt);
           }}
         >
-          <Undo2 size={18} /> <span>Restore</span>
+          <Undo2 size={16} /> <span>Restore</span>
         </ActionButton>
         <ActionButton
           onClick={() => {
             setLocalSystem("");
           }}
         >
-          <Eraser size={18} /> <span>Clear</span>
+          <Eraser size={16} /> <span>Clear</span>
         </ActionButton>
         <ActionButton
           onClick={() => {
@@ -68,7 +64,7 @@ export const SettingsSection = () => {
             useAppStore.setState({ section: null });
           }}
         >
-          <Save size={18} /> <span>Save</span>
+          <Save size={16} /> <span>Save</span>
         </ActionButton>
       </div>
     </motion.div>
@@ -81,7 +77,7 @@ export const ActionButton = ({
 }: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
-      className="flex gap-2  items-center text-violet-500 hover:text-violet-500 border-slate-400 p-2 rounded-md border"
+      className="flex gap-2 text-xs items-center text-violet-500 hover:text-violet-500 border-slate-400 p-2 rounded-md border"
       {...props}
     >
       {children}

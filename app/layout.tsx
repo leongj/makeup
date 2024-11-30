@@ -1,5 +1,5 @@
 import { AI } from "@/features/home-page/ai-context";
-import { AppBar } from "@/features/home-page/app-bar";
+import { AppBar } from "@/features/home-page/app-bar/app-bar";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";

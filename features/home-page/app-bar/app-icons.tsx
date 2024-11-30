@@ -1,4 +1,4 @@
-import { cn } from "../common/util";
+import { cn } from "../../common/util";
 
 interface IconProps {
   className?: string;

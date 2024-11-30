@@ -1,11 +1,11 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
 import { ButtonHTMLAttributes } from "react";
-import { cn } from "../common/util";
+import { cn } from "../../common/util";
+import { updateSection, useAppStore } from "../store";
+import { UploadImage } from "../upload-file";
 import { CameraIcon, SettingsIcon } from "./app-icons";
 import { SettingsSection } from "./settings-section";
-import { updateSection, useAppStore } from "./store";
-import { UploadImage } from "./upload-file";
 
 export const AppBar = () => {
   const section = useAppStore((state) => state.section);
