@@ -29,7 +29,7 @@ export const AppBar = (props: Props) => {
         )}
       >
         <AnimatePresence>{section}</AnimatePresence>
-        <motion.div layout className="flex gap-2 items-center justify-center">
+        <motion.div layout className="flex gap-1 items-center justify-center">
           {children}
         </motion.div>
       </motion.div>
@@ -39,14 +39,18 @@ export const AppBar = (props: Props) => {
 
 export const AppBarButton = ({
   children,
+  className,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
-      className="overflow-hidden group rounded-2xl  hover:bg-violet-400/30 transition-all duration-500 outline-none focus:ring-2 ring-violet-500"
+      className={cn(
+        "overflow-hidden group rounded-2xl  hover:bg-violet-400/30 transition-all duration-500 outline-none focus:ring-2 ring-violet-500",
+        className
+      )}
       {...props}
     >
-      <span className="block p-3 group-hover:scale-125 transform transition-transform duration-300">
+      <span className="flex gap-2 p-3 group-hover:scale-125 transform transition-transform duration-300">
         {children}
       </span>
     </button>

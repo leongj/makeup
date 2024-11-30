@@ -1,8 +1,8 @@
 "use client";
 import { AppBar, AppBarButton } from "@/features/ui/app-bar/app-bar";
+import { SettingsIcon } from "@/features/ui/app-icons";
 import { UploadImage } from "../upload-file";
 import { showAppBarSection, useAppBardSection } from "./app-bar-store";
-import { SettingsIcon } from "./app-icons";
 import { SettingsSection } from "./settings-section";
 
 export const HomeAppBar = () => {

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { AppBarButton } from "../ui/app-bar/app-bar";
-import { ImageIcon } from "./app-bar/app-icons";
+import { ImageIcon } from "../ui/app-icons";
 import { updateFiles } from "./store";
 
 export const UploadImage = () => {

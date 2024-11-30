@@ -1,22 +1,17 @@
 "use client";
 
 import { cn } from "@/features/common/util";
-import { AudioLines, Mic, MicOff, Square } from "lucide-react";
-import { ReactNode } from "react";
+import { AppBarButton } from "@/features/ui/app-bar/app-bar";
+import {
+  VoiceIcon,
+  VoiceMuteIcon,
+  VoiceRobotIcon,
+} from "@/features/ui/app-icons";
 import { connectRealtime, disconnectRealtime } from "./realtime-client";
 import { toggleMute, useRealtimeStore } from "./realtime-store";
 
 export const RealTimeButton = () => {
   const loading = useRealtimeStore((state) => state.loading);
-  let buttonIcon: ReactNode = <AudioLines />;
-
-  if (loading === "connected") {
-    buttonIcon = <Square />;
-  }
-
-  if (loading === "connecting") {
-    buttonIcon = <AudioLines className="animate-pulse" />;
-  }
 
   const onClick = () => {
     if (loading === "connected") {
@@ -27,16 +22,18 @@ export const RealTimeButton = () => {
   };
 
   return (
-    <button
+    <AppBarButton
       onClick={onClick}
       type="button"
       className={cn(
-        loading === "connected" && "bg-green-500 hover:bg-green-600",
-        loading === "connecting" && "bg-yellow-500 hover:bg-yellow-600"
+        "",
+        loading === "connected" &&
+          "ring-green-200 ring-2 hover:bg-green-50 bg-violet-50",
+        loading === "connecting" && "ring-orange-200 hover:bg-orange-50"
       )}
     >
-      {buttonIcon}
-    </button>
+      <VoiceRobotIcon />
+    </AppBarButton>
   );
 };
 
@@ -48,12 +45,22 @@ export const RealTimeMuteButton = () => {
   };
 
   return (
-    <button
-      onClick={onClick}
-      type="button"
-      className={cn(isMuted && "bg-red-500 hover:bg-red-600")}
-    >
-      {isMuted ? <MicOff /> : <Mic />}
-    </button>
+    <AppBarButton onClick={onClick}>
+      {isMuted ? <VoiceMuteIcon /> : <VoiceIcon />}
+    </AppBarButton>
+  );
+};
+
+export const RealTimePushToTalk = () => {
+  const isMuted = useRealtimeStore((state) => state.isMuted);
+
+  const onClick = () => {
+    toggleMute();
+  };
+
+  return (
+    <AppBarButton onClick={onClick}>
+      {isMuted ? <VoiceMuteIcon /> : <VoiceIcon />}
+    </AppBarButton>
   );
 };
