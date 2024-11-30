@@ -1,16 +1,13 @@
 import { AltImages } from "./alt-images";
+import { Header, LandingPage } from "./header";
 import { ImageDescription } from "./image-description";
 
 export const HomePage = () => {
   return (
     <div className=" h-svh max-h-svh text-slate-500">
-      <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col gap-4 pb-40">
-        <div className="py-8">
-          <h1 className="text-4xl font-semibold">Focal</h1>
-          <h4 className="text-sm text-slate-400">
-            Generating alt text and descriptions for images using Azure OpenAI
-          </h4>
-        </div>
+      <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col gap-4 py-28  min-h-full">
+        <Header />
+        <LandingPage />
         <AltImages />
         <ImageDescription />
       </div>

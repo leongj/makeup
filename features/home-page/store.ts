@@ -31,7 +31,7 @@ const initialState: AppState = {
   },
 };
 
-const useAppStore = create<AppState>(() => initialState);
+export const useAppStore = create<AppState>(() => initialState);
 
 export const useAltImages = () => {
   return useAppStore((state) => state.altImages);
