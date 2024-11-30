@@ -4,7 +4,7 @@ import { ButtonHTMLAttributes } from "react";
 import { cn } from "../../common/util";
 import { UploadImage } from "../upload-file";
 import { showAppBarSection, useAppBardSection } from "./app-bar-store";
-import { CameraIcon, SettingsIcon } from "./app-icons";
+import { SettingsIcon } from "./app-icons";
 import { SettingsSection } from "./settings-section";
 
 export const AppBar = () => {
@@ -39,9 +39,9 @@ export const AppBar = () => {
 export const ActionBarFooter = () => {
   return (
     <motion.div layout className="flex gap-2 items-center justify-center">
-      <AppBarButton>
+      {/* <AppBarButton>
         <CameraIcon />
-      </AppBarButton>
+      </AppBarButton> */}
       <UploadImage />
       <AppBarButton
         onClick={() => {
