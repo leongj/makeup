@@ -1,5 +1,4 @@
 import { AI } from "@/features/home-page/ai-context";
-import { HomeAppBar } from "@/features/home-page/app-bar/app-bar";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -26,7 +25,6 @@ export default function RootLayout({
           className={`${poppins.className}  antialiased bg-slate-100 text-slate-300`}
         >
           {children}
-          <HomeAppBar />
         </body>
       </html>
     </AI>

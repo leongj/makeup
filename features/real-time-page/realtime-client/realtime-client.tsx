@@ -6,7 +6,7 @@ import {
   initAudioPlayer,
   playAudio,
   stopAudio,
-} from "@/features/real-time/audio-player/audio-player";
+} from "@/features/real-time-page/audio-player/audio-player";
 import {
   FormattedItem,
   RealtimeClient,

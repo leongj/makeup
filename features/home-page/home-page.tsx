@@ -1,4 +1,5 @@
 import { AltImages } from "./alt-images";
+import { HomeAppBar } from "./app-bar/app-bar";
 import { Header, LandingPage } from "./header";
 import { ImageDescription } from "./image-description";
 
@@ -11,6 +12,7 @@ export const HomePage = () => {
         <AltImages />
         <ImageDescription />
       </div>
+      <HomeAppBar />
     </div>
   );
 };
