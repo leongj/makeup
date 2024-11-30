@@ -10,7 +10,7 @@ import { SettingsSection } from "./settings-section";
 export const AppBar = () => {
   const section = useAppBardSection();
   return (
-    <div className="fixed left-0 bottom-0 w-full flex justify-center p-3  ">
+    <div className="fixed left-0 bottom-0 w-full flex justify-center p-4  ">
       <motion.div
         layout
         initial={{ opacity: 0, y: 45 }}
