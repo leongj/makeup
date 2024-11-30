@@ -12,121 +12,113 @@ const LIGHT_OPACITY = 0.6;
 const DARK_OPACITY = 1;
 const FILL_COLOR = "fill-violet-500";
 
-export const CameraIcon = (props: IconProps) => {
-  const { size = DEFAULT_SIZE, strokeWidth = STOKE_WIDTH } = props;
+// New BaseIcon component
+const BaseIcon = ({
+  size = DEFAULT_SIZE,
+  strokeWidth = STOKE_WIDTH,
+  viewBox = "0 0 48 48",
+  children,
+  ...props
+}: IconProps & { viewBox?: string; children: React.ReactNode }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      viewBox="0 0 48 48"
-      id="Camera-1--Streamline-Plump"
+      viewBox={viewBox}
       height={size}
       width={size}
+      {...props}
     >
+      {children}
+    </svg>
+  );
+};
+
+export const CameraIcon = (props: IconProps) => {
+  return (
+    <BaseIcon {...props}>
       <g>
         <path
-          id="Subtract"
           opacity={LIGHT_OPACITY}
           className={cn(FILL_COLOR)}
           fillRule="evenodd"
           d="M19.136 3.675A64.996 64.996 0 0 1 24 3.5c1.973 0 3.617 0.08 4.864 0.175 2.207 0.166 4.032 1.554 4.954 3.453l1.067 2.198c1.8 0.068 3.339 0.146 4.615 0.223 3.45 0.208 6.194 2.856 6.5 6.307 0.251 2.816 0.5 6.695 0.5 11.008 0 4.312 -0.249 8.192 -0.5 11.007 -0.306 3.452 -3.05 6.099 -6.5 6.307 -3.354 0.203 -8.516 0.413 -15.5 0.413s-12.146 -0.21 -15.5 -0.413c-3.45 -0.208 -6.194 -2.855 -6.5 -6.307 -0.251 -2.815 -0.5 -6.695 -0.5 -11.007 0 -4.313 0.249 -8.192 0.5 -11.008 0.306 -3.451 3.05 -6.099 6.5 -6.307 1.276 -0.077 2.815 -0.155 4.615 -0.223l1.067 -2.198c0.922 -1.899 2.747 -3.287 4.954 -3.453Z"
           clipRule="evenodd"
-          strokeWidth={strokeWidth}
+          strokeWidth={props.strokeWidth}
         />
         <path
-          id="Subtract_2"
           opacity={DARK_OPACITY}
           className={cn(FILL_COLOR)}
           fillRule="evenodd"
           d="M14.5 26a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1 -19 0Z"
           clipRule="evenodd"
-          strokeWidth={strokeWidth}
+          strokeWidth={props.strokeWidth}
         />
       </g>
-    </svg>
+    </BaseIcon>
   );
 };
+
 export const ImageIcon = (props: IconProps) => {
-  const { size = DEFAULT_SIZE, strokeWidth = STOKE_WIDTH } = props;
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 48 48"
-      height={size}
-      width={size}
-      {...props}
-    >
+    <BaseIcon {...props}>
       <g>
         <path
-          id="Union"
           opacity={LIGHT_OPACITY}
           className={cn(FILL_COLOR)}
           d="M28.5 10.5c-5.166 0 -8.966 0.172 -11.56 0.357 -3.3 0.236 -5.847 2.782 -6.083 6.084 -0.185 2.593 -0.357 6.393 -0.357 11.559 0 5.166 0.172 8.966 0.357 11.56 0.236 3.3 2.782 5.847 6.084 6.083 2.593 0.185 6.393 0.357 11.559 0.357 5.166 0 8.966 -0.172 11.56 -0.357 3.3 -0.236 5.847 -2.782 6.083 -6.084 0.185 -2.593 0.357 -6.393 0.357 -11.559 0 -5.166 -0.172 -8.966 -0.357 -11.56 -0.236 -3.3 -2.782 -5.847 -6.084 -6.083 -2.593 -0.185 -6.393 -0.357 -11.559 -0.357Z"
-          strokeWidth={strokeWidth}
+          strokeWidth={props.strokeWidth}
         />
         <path
-          id="Subtract"
           opacity={DARK_OPACITY}
           className={cn(FILL_COLOR)}
           d="M7.94 1.857c2.594 -0.185 6.394 -0.357 11.56 -0.357s8.966 0.172 11.56 0.357c3.214 0.23 5.713 2.65 6.06 5.825A188.37 188.37 0 0 0 28.5 7.5c-5.233 0 -9.104 0.174 -11.773 0.365 -4.79 0.342 -8.52 4.072 -8.862 8.862 -0.19 2.669 -0.365 6.54 -0.365 11.773 0 3.45 0.076 6.307 0.182 8.62 -3.175 -0.347 -5.595 -2.846 -5.825 -6.06 -0.185 -2.594 -0.357 -6.394 -0.357 -11.56s0.172 -8.966 0.357 -11.56c0.236 -3.3 2.782 -5.847 6.084 -6.083Z"
-          strokeWidth={strokeWidth}
+          strokeWidth={props.strokeWidth}
         />
         <path
           opacity={DARK_OPACITY}
           className={cn(FILL_COLOR)}
           d="M43.417 34.39a85.278 85.278 0 0 0 -3.263 -2.832c-1.493 -1.222 -3.497 -1.415 -5.136 -0.322 -1.064 0.71 -2.492 1.765 -4.329 3.321 -2.791 -2.657 -4.74 -4.354 -6.04 -5.418 -1.494 -1.221 -3.498 -1.415 -5.137 -0.322 -1.358 0.906 -3.313 2.377 -5.952 4.736 0.066 2.612 0.176 4.696 0.29 6.293 0.13 1.813 1.492 3.175 3.305 3.304 2.517 0.18 6.245 0.35 11.345 0.35 5.1 0 8.828 -0.17 11.346 -0.35 1.813 -0.13 3.175 -1.491 3.304 -3.304 0.102 -1.423 0.2 -3.232 0.267 -5.456Z"
-          strokeWidth={strokeWidth}
+          strokeWidth={props.strokeWidth}
         />
         <path
           opacity={DARK_OPACITY}
           className={cn(FILL_COLOR)}
           d="M32.5 20.5a4 4 0 1 1 8 0 4 4 0 0 1 -8 0Z"
-          strokeWidth={strokeWidth}
+          strokeWidth={props.strokeWidth}
         />
         <path
           opacity={DARK_OPACITY}
           className={cn(FILL_COLOR)}
           d="M46.316 37.091c-2.857 -2.724 -4.842 -4.454 -6.162 -5.533 -1.493 -1.222 -3.498 -1.415 -5.136 -0.322 -1.064 0.71 -2.493 1.765 -4.329 3.321 -2.791 -2.657 -4.74 -4.354 -6.04 -5.418 -1.494 -1.221 -3.498 -1.415 -5.137 -0.322 -1.817 1.212 -4.701 3.434 -8.864 7.446 0.06 1.474 0.133 2.736 0.21 3.796 0.235 3.302 2.781 5.848 6.082 6.084 2.594 0.185 6.394 0.357 11.56 0.357s8.966 -0.172 11.56 -0.357c3.3 -0.236 5.847 -2.782 6.082 -6.084 0.061 -0.856 0.121 -1.843 0.174 -2.968Z"
-          strokeWidth={strokeWidth}
+          strokeWidth={props.strokeWidth}
         />
       </g>
-    </svg>
+    </BaseIcon>
   );
 };
 
 export const SettingsIcon = (props: IconProps) => {
-  const { size = DEFAULT_SIZE, strokeWidth = STOKE_WIDTH } = props;
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 48 48"
-      id="Ai-Generate-Variation-Spark--Streamline-Plump"
-      height={size}
-      width={size}
-      {...props}
-    >
-      <g id="ai-generate-variation-spark--module-application-artificial-intelligence-ai">
+    <BaseIcon {...props}>
+      <g>
         <path
-          id="Union"
           opacity={DARK_OPACITY}
           className={cn(FILL_COLOR)}
           fillRule="evenodd"
           d="M38.693 1.884c-0.948 -1.733 -3.438 -1.733 -4.386 0l-1.992 3.642a4.5 4.5 0 0 1 -1.789 1.789l-3.642 1.992c-1.733 0.948 -1.733 3.438 0 4.386l3.642 1.992a4.5 4.5 0 0 1 1.789 1.789l1.992 3.642c0.948 1.733 3.438 1.733 4.386 0l1.992 -3.642a4.499 4.499 0 0 1 1.789 -1.789l3.642 -1.992c1.733 -0.948 1.733 -3.438 0 -4.386l-3.642 -1.992a4.5 4.5 0 0 1 -1.789 -1.789l-1.992 -3.642Z"
           clipRule="evenodd"
-          strokeWidth={strokeWidth}
+          strokeWidth={props.strokeWidth}
         />
         <path
-          id="Union_2"
           opacity={LIGHT_OPACITY}
           className={cn(FILL_COLOR)}
           fillRule="evenodd"
           d="M11.5 0.5C8.497 0.5 6.37 0.666 4.89 0.867 2.4 1.207 0.806 3.19 0.656 5.55 0.569 6.896 0.5 8.812 0.5 11.5s0.069 4.604 0.155 5.951c0.15 2.36 1.746 4.342 4.236 4.682 1.479 0.201 3.606 0.367 6.609 0.367s5.13 -0.166 6.61 -0.367c2.49 -0.34 4.085 -2.322 4.235 -4.682 0.086 -1.347 0.155 -3.263 0.155 -5.951 0 -2.688 -0.069 -4.604 -0.155 -5.951 -0.15 -2.36 -1.745 -4.342 -4.236 -4.682C16.63 0.666 14.503 0.5 11.5 0.5Zm0 47c-3.003 0 -5.13 -0.166 -6.61 -0.367C2.4 46.793 0.806 44.81 0.656 42.45 0.569 41.104 0.5 39.188 0.5 36.5s0.069 -4.604 0.155 -5.951c0.15 -2.36 1.746 -4.342 4.236 -4.682 1.479 -0.201 3.606 -0.367 6.609 -0.367s5.13 0.166 6.61 0.367c2.49 0.34 4.085 2.322 4.235 4.682 0.086 1.347 0.155 3.263 0.155 5.951 0 2.688 -0.069 4.604 -0.155 5.951 -0.15 2.36 -1.745 4.342 -4.236 4.682 -1.479 0.201 -3.606 0.367 -6.609 0.367Zm35.633 -4.39c0.201 -1.48 0.367 -3.607 0.367 -6.61s-0.166 -5.13 -0.367 -6.61c-0.34 -2.49 -2.322 -4.085 -4.682 -4.235 -1.347 -0.086 -3.263 -0.155 -5.951 -0.155 -2.688 0 -4.604 0.069 -5.951 0.155 -2.36 0.15 -4.342 1.745 -4.682 4.236 -0.201 1.479 -0.367 3.606 -0.367 6.609s0.166 5.13 0.367 6.61c0.34 2.49 2.322 4.085 4.682 4.235 1.347 0.086 3.263 0.155 5.951 0.155 2.688 0 4.604 -0.069 5.951 -0.155 2.36 -0.15 4.342 -1.745 4.682 -4.236Z"
           clipRule="evenodd"
-          strokeWidth={strokeWidth}
+          strokeWidth={props.strokeWidth}
         />
       </g>
-    </svg>
+    </BaseIcon>
   );
 };
