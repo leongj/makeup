@@ -3,10 +3,11 @@ import { Eraser, Save, Undo2, X } from "lucide-react";
 import { motion } from "motion/react";
 import { ButtonHTMLAttributes, useState } from "react";
 import { DescriptionSystemPrompt } from "../prompts";
-import { updateSection, updateSystemPrompt, useAppStore } from "../store";
+import { updateSystemPrompt, useImageDescription } from "../store";
+import { closeAppBarSection } from "./app-bar-store";
 
 export const SettingsSection = () => {
-  const system = useAppStore((state) => state.imageDescription.system);
+  const system = useImageDescription().system;
   const [localSystem, setLocalSystem] = useState(system);
   return (
     <motion.div
@@ -27,7 +28,7 @@ export const SettingsSection = () => {
       <div className="flex justify-end py-2">
         <ActionButton
           onClick={() => {
-            updateSection(null);
+            closeAppBarSection();
           }}
         >
           <X size={16} />
@@ -61,7 +62,7 @@ export const SettingsSection = () => {
         <ActionButton
           onClick={() => {
             updateSystemPrompt(localSystem);
-            useAppStore.setState({ section: null });
+            closeAppBarSection();
           }}
         >
           <Save size={16} /> <span>Save</span>

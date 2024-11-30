@@ -1,10 +1,10 @@
 "use client";
 
-import { useAppStore } from "./store";
+import { useAltImages, useImageDescription } from "./store";
 
 export const ImageDescription = () => {
-  const images = useAppStore((state) => state.images);
-  const imageDescription = useAppStore((state) => state.imageDescription);
+  const images = useAltImages();
+  const imageDescription = useImageDescription();
 
   if (images.length === 0) {
     return null;

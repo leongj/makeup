@@ -2,10 +2,10 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { Loading } from "../common/loading";
-import { ImageItemState, useAppStore } from "./store";
+import { ImageItemState, useAltImages } from "./store";
 
 export const AltImages = () => {
-  const images = useAppStore((state) => state.images);
+  const images = useAltImages();
 
   if (images.length === 0) {
     return null;

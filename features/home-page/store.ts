@@ -12,34 +12,34 @@ export type ImageItemState = {
 };
 
 export type ImageDescriptionState = {
-  isLoading: boolean;
   description: ReactNode;
   system: string;
 };
 
 type AppState = {
   files: FileList | null;
-  images: ImageItemState[];
+  altImages: ImageItemState[];
   imageDescription: ImageDescriptionState;
-  loading: "idle" | "pending" | "success" | "error";
-  sectionIsOpen: boolean;
-  section?: ReactNode;
 };
 
 const initialState: AppState = {
   files: null,
-  images: [],
+  altImages: [],
   imageDescription: {
-    isLoading: false,
     description: "",
     system: DescriptionSystemPrompt,
   },
-  loading: "idle",
-  sectionIsOpen: false,
-  section: null,
 };
 
-export const useAppStore = create<AppState>(() => initialState);
+const useAppStore = create<AppState>(() => initialState);
+
+export const useAltImages = () => {
+  return useAppStore((state) => state.altImages);
+};
+
+export const useImageDescription = () => {
+  return useAppStore((state) => state.imageDescription);
+};
 
 export const updateFiles = async (files: FileList) => {
   useAppStore.setState((state) => ({
@@ -48,7 +48,6 @@ export const updateFiles = async (files: FileList) => {
     imageDescription: {
       ...state.imageDescription,
       description: "",
-      isLoading: true,
     },
   }));
 
@@ -61,14 +60,6 @@ export const updateFiles = async (files: FileList) => {
   startGeneratingDescription();
 };
 
-export const updateLoading = (loading: AppState["loading"]) => {
-  useAppStore.setState({ loading });
-};
-
-export const updateSection = (section: ReactNode) => {
-  useAppStore.setState({ section });
-};
-
 export const updateSystemPrompt = (system: string) => {
   useAppStore.setState((state) => ({
     ...state,
@@ -78,10 +69,10 @@ export const updateSystemPrompt = (system: string) => {
 
 const startGeneratingDescription = async () => {
   const state = useAppStore.getState();
-  const images = state.images.map((image) => image.base64);
+  const images = state.altImages.map((image) => image.base64);
   useAppStore.setState(() => ({
     ...state,
-    imageDescription: { ...state.imageDescription, isLoading: true },
+    imageDescription: { ...state.imageDescription },
   }));
 
   try {
@@ -94,7 +85,6 @@ const startGeneratingDescription = async () => {
       ...state,
       imageDescription: {
         ...state.imageDescription,
-        isLoading: false,
         description: result,
       },
     }));
@@ -106,15 +96,15 @@ const startGeneratingDescription = async () => {
 const updateImageByIndex = (id: number, image: ImageItemState) => {
   const state = useAppStore.getState();
   // find the image by the id
-  const index = state.images.findIndex((img) => img.index === id);
+  const index = state.altImages.findIndex((img) => img.index === id);
 
   if (index === -1) {
-    state.images.push(image);
+    state.altImages.push(image);
   } else {
-    state.images[index] = image;
+    state.altImages[index] = image;
   }
 
-  useAppStore.setState(() => ({ ...state, images: [...state.images] }));
+  useAppStore.setState(() => ({ ...state, altImages: [...state.altImages] }));
 };
 
 const startGeneratingAltText = async (file: File, index: number) => {
