@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { ButtonHTMLAttributes, useState } from "react";
 import {
   DescriptionSystemPrompt,
+  updateSection,
   updateSystemPrompt,
   useAppStore,
 } from "./store";
@@ -30,7 +31,7 @@ export const SettingsSection = () => {
       <div className="flex justify-end py-2">
         <ActionButton
           onClick={() => {
-            useAppStore.setState({ section: null });
+            updateSection(null);
           }}
         >
           <X />
@@ -47,7 +48,6 @@ export const SettingsSection = () => {
         placeholder="System prompt.."
       />
       <div className="py-2 flex gap-2 justify-end">
-        {" "}
         <ActionButton
           onClick={() => {
             setLocalSystem(DescriptionSystemPrompt);

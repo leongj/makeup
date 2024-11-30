@@ -23,8 +23,7 @@ export const CameraIcon = (props: IconProps) => {
       height={size}
       width={size}
     >
-      <desc>{"Camera 1 Streamline Icon: https://streamlinehq.com"}</desc>
-      <g id="camera-1--photos-picture-camera-photography-photo-pictures">
+      <g>
         <path
           id="Subtract"
           opacity={LIGHT_OPACITY}
@@ -54,12 +53,11 @@ export const ImageIcon = (props: IconProps) => {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 48 48"
-      id="Gallery-2--Streamline-Plump"
       height={size}
       width={size}
       {...props}
     >
-      <g id="gallery-2--pages-filter-picture-pagination-image">
+      <g>
         <path
           id="Union"
           opacity={LIGHT_OPACITY}
@@ -75,21 +73,18 @@ export const ImageIcon = (props: IconProps) => {
           strokeWidth={strokeWidth}
         />
         <path
-          id="Subtract_2"
           opacity={DARK_OPACITY}
           className={cn(FILL_COLOR)}
           d="M43.417 34.39a85.278 85.278 0 0 0 -3.263 -2.832c-1.493 -1.222 -3.497 -1.415 -5.136 -0.322 -1.064 0.71 -2.492 1.765 -4.329 3.321 -2.791 -2.657 -4.74 -4.354 -6.04 -5.418 -1.494 -1.221 -3.498 -1.415 -5.137 -0.322 -1.358 0.906 -3.313 2.377 -5.952 4.736 0.066 2.612 0.176 4.696 0.29 6.293 0.13 1.813 1.492 3.175 3.305 3.304 2.517 0.18 6.245 0.35 11.345 0.35 5.1 0 8.828 -0.17 11.346 -0.35 1.813 -0.13 3.175 -1.491 3.304 -3.304 0.102 -1.423 0.2 -3.232 0.267 -5.456Z"
           strokeWidth={strokeWidth}
         />
         <path
-          id="Subtract_3"
           opacity={DARK_OPACITY}
           className={cn(FILL_COLOR)}
           d="M32.5 20.5a4 4 0 1 1 8 0 4 4 0 0 1 -8 0Z"
           strokeWidth={strokeWidth}
         />
         <path
-          id="Intersect"
           opacity={DARK_OPACITY}
           className={cn(FILL_COLOR)}
           d="M46.316 37.091c-2.857 -2.724 -4.842 -4.454 -6.162 -5.533 -1.493 -1.222 -3.498 -1.415 -5.136 -0.322 -1.064 0.71 -2.493 1.765 -4.329 3.321 -2.791 -2.657 -4.74 -4.354 -6.04 -5.418 -1.494 -1.221 -3.498 -1.415 -5.137 -0.322 -1.817 1.212 -4.701 3.434 -8.864 7.446 0.06 1.474 0.133 2.736 0.21 3.796 0.235 3.302 2.781 5.848 6.082 6.084 2.594 0.185 6.394 0.357 11.56 0.357s8.966 -0.172 11.56 -0.357c3.3 -0.236 5.847 -2.782 6.082 -6.084 0.061 -0.856 0.121 -1.843 0.174 -2.968Z"

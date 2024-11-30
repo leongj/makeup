@@ -4,7 +4,7 @@ import { ButtonHTMLAttributes } from "react";
 import { cn } from "../common/util";
 import { CameraIcon, SettingsIcon } from "./app-icons";
 import { SettingsSection } from "./settings-section";
-import { useAppStore } from "./store";
+import { updateSection, useAppStore } from "./store";
 import { UploadImage } from "./upload-file";
 
 export const AppBar = () => {
@@ -28,25 +28,29 @@ export const AppBar = () => {
           "overflow-hidden flex-col flex items-center gap-6 px-4 py-3 bg-white rounded-full shadow-lg"
         )}
       >
-        <AnimatePresence mode="popLayout" initial={false}>
-          {section}
-        </AnimatePresence>
+        <AnimatePresence>{section}</AnimatePresence>
 
-        <div className="flex gap-2 items-center justify-center">
-          <AppBarButton>
-            <CameraIcon />
-          </AppBarButton>
-          <UploadImage />
-          <AppBarButton
-            onClick={() => {
-              useAppStore.setState({ section: <SettingsSection /> });
-            }}
-          >
-            <SettingsIcon />
-          </AppBarButton>
-        </div>
+        <ActionBarFooter />
       </motion.div>
     </div>
+  );
+};
+
+export const ActionBarFooter = () => {
+  return (
+    <motion.div layout className="flex gap-2 items-center justify-center">
+      <AppBarButton>
+        <CameraIcon />
+      </AppBarButton>
+      <UploadImage />
+      <AppBarButton
+        onClick={() => {
+          updateSection(<SettingsSection />);
+        }}
+      >
+        <SettingsIcon />
+      </AppBarButton>
+    </motion.div>
   );
 };
 
