@@ -1,6 +1,7 @@
 "use client";
 
 import { resolveAfter } from "@/features/common/util";
+import { RealTimeSystemPrompt } from "@/features/home-page/prompts";
 import {
   disposeAudioPlayer,
   initAudioPlayer,
@@ -13,7 +14,9 @@ import {
   RealtimeCustomEvents,
   RealtimeServerEvents,
 } from "openai-realtime-api";
-import { isMuted, setDisplayResults, setLoading } from "./realtime-store";
+import { generateImageDescription } from "../actions";
+import { capture } from "../camera/camera-store";
+import { isMuted, setLoading } from "./realtime-store";
 import { callWeather } from "./server-api";
 
 let lastActiveAssistantItem: FormattedItem | null = null;
@@ -21,6 +24,7 @@ let lastActiveAssistantItem: FormattedItem | null = null;
 const realtimeClient = new RealtimeClient({
   url: `${process.env.NEXT_PUBLIC_AZURE_OPENAI_REALTIME_ENDPOINT}`,
   sessionConfig: {
+    instructions: RealTimeSystemPrompt,
     turn_detection: {
       type: "server_vad",
       prefix_padding_ms: 200,
@@ -89,9 +93,9 @@ export const connectRealtime = async () => {
 const handleFunctionCallOutput = (
   event: RealtimeServerEvents.ConversationItemCreatedEvent
 ) => {
-  if (event.item.type === "function_call_output") {
-    setDisplayResults(event.item.output);
-  }
+  // if (event.item.type === "function_call_output") {
+  //   setDisplayResults(event.item.output);
+  // }
 };
 
 export const disconnectRealtime = async () => {
@@ -148,6 +152,46 @@ const addInitialTools = () => {
     async ({ location }: { location: string }) => {
       console.log("Calling weather API");
       return await callWeather(location);
+    }
+  );
+
+  realtimeClient.addTool(
+    {
+      name: "take_photo",
+      description: `Use take_photo tool to take photos when the user asks for it. \n
+        You can take more than one photo and there are no limitations.\n
+        The tool will return a description of the photo. \n
+        As soon as take_photo is called, just acknowledge the user that you've taken a photo and let them know that you're working on it.`,
+      parameters: {
+        type: "object",
+        properties: {
+          task: {
+            type: "string",
+            description: "The task to perform with the photo",
+          },
+        },
+        required: [],
+      },
+    },
+    async ({ task }: { task: string }) => {
+      console.log(task);
+      // realtimeClient.sendUserMessageContent([
+      //   {
+      //     type: "input_text",
+      //     text: `let the user know that I've taken a photo and ${task}. Also let them know that this might take bit of time so just hang tight. Say it in your own way.`,
+      //   },
+      // ]);
+      const photo = capture();
+
+      if (photo) {
+        const response = await generateImageDescription({
+          image: photo,
+          userRequest: task,
+        });
+        return `I've taken a photo and ${response}`;
+      } else {
+        return "I'm sorry, looks like there was an issue. You can ask by saying 'take a photo'";
+      }
     }
   );
 };

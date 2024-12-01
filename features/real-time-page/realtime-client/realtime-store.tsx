@@ -50,17 +50,3 @@ export const setCallback = (
   state.setMessages = callback;
   useRealtimeStore.setState(() => ({ ...state }));
 };
-
-// TODO: Remove this function
-export const setDisplayResults = (displayResults: string) => {
-  const state = useRealtimeStore.getState();
-  state.displayResults = displayResults;
-  useRealtimeStore.setState(() => ({ ...state }));
-  // toast("Function call result", {
-  //   description: displayResults,
-  //   action: {
-  //     label: "Close",
-  //     onClick: () => {},
-  //   },
-  // });
-};

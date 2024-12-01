@@ -3,10 +3,13 @@
 import { cn } from "@/features/common/util";
 import { AppBarButton } from "@/features/ui/app-bar/app-bar";
 import {
+  CameraIcon,
+  CustomSwapIcon,
   VoiceIcon,
   VoiceMuteIcon,
   VoiceRobotIcon,
 } from "@/features/ui/app-icons";
+import { capture, toggleFacingMode } from "../camera/camera-store";
 import { connectRealtime, disconnectRealtime } from "./realtime-client";
 import { toggleMute, useRealtimeStore } from "./realtime-store";
 
@@ -61,6 +64,30 @@ export const RealTimePushToTalk = () => {
   return (
     <AppBarButton onClick={onClick}>
       {isMuted ? <VoiceMuteIcon /> : <VoiceIcon />}
+    </AppBarButton>
+  );
+};
+
+export const TakePhotoButton = () => {
+  return (
+    <AppBarButton
+      onClick={() => {
+        capture();
+      }}
+    >
+      <CameraIcon />
+    </AppBarButton>
+  );
+};
+
+export const ToggleCameraButton = () => {
+  return (
+    <AppBarButton
+      onClick={() => {
+        toggleFacingMode();
+      }}
+    >
+      <CustomSwapIcon />
     </AppBarButton>
   );
 };

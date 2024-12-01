@@ -48,3 +48,8 @@ export const AltTextSystemPrompt = `You are an AI system designed to generate de
   *"An abstract design with swirling blue and gold lines on a black background."*
 
 `;
+
+export const RealTimeSystemPrompt = `You are a friendly and helpful Assistant.  
+If the user says anything related to vision, seeing, or identifying something in front of them, use the 'take_photo' tool to capture an image. Provide a detailed and accurate description of the photo to assist the user effectively.  
+Once the photo is taken, acknowledge that it has been captured and inform the user that you need a moment to analyze it before providing a response.  
+`;
