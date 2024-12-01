@@ -8,7 +8,6 @@ interface Props {
 }
 
 export const generateImageDescription = async (base: Props) => {
-  console.log(base);
   try {
     const azure = AzureProvider();
     const result = await generateText({
