@@ -3,7 +3,7 @@ import { HomeAppBar } from "./app-bar/app-bar";
 import { Header, LandingPage } from "./header";
 import { ImageDescription } from "./image-description";
 
-export const HomePage = () => {
+export const HomePage = async () => {
   return (
     <div className=" h-svh max-h-svh text-slate-500">
       <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col gap-4 pb-28  min-h-full">

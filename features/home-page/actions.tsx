@@ -1,32 +1,38 @@
 "use server";
 
-import { CoreMessage, generateText, streamText } from "ai";
 import { createStreamableUI } from "ai/rsc";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { Loading } from "../common/loading";
 import { Markdown } from "../common/markdown";
-import { AzureProvider } from "./azure";
+import { AzureOpenAI } from "./azure";
 import { AltTextSystemPrompt } from "./prompts";
 
 export const generateImageAltText = async (base: string) => {
   try {
-    const azure = AzureProvider();
-    const result = await generateText({
-      system: AltTextSystemPrompt,
-      model: azure,
+    const client = AzureOpenAI();
+
+    const chatCompletion = await client.chat.completions.create({
+      model: "gpt-4o",
       messages: [
+        {
+          role: "system",
+          content: AltTextSystemPrompt,
+        },
         {
           role: "user",
           content: [
             {
-              type: "image",
-              image: `data:image/jpeg;base64 ${base}`,
+              type: "image_url",
+              image_url: {
+                url: `data:image/jpeg;base64 ${base}`,
+              },
             },
           ],
         },
       ],
     });
 
-    return result.text;
+    return chatCompletion.choices[0].message.content;
   } catch (error) {
     console.error("Error", error);
     return `There was an error`;
@@ -41,30 +47,44 @@ interface Props {
 export const generateImageDescription = async (props: Props) => {
   const ui = createStreamableUI(<Loading />);
   const { system, images } = props;
-  const messages: Array<CoreMessage> = [
-    {
-      role: "user",
-      content: images.map((image) => {
-        return {
-          type: "image",
-          image: `data:image/jpeg;base64 ${image}`,
-        };
-      }),
-    },
-  ];
 
   const triggerAI = async () => {
-    let fullText = "";
     try {
-      const azure = AzureProvider();
-      const result = streamText({
-        system: system,
-        model: azure,
-        messages: messages,
+      const client = AzureOpenAI();
+
+      const messages: Array<ChatCompletionMessageParam> = images.map(
+        (image) => {
+          return {
+            role: "user",
+            content: [
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:image/jpeg;base64 ${image}`,
+                },
+              },
+            ],
+          };
+        }
+      );
+
+      const stream = await client.chat.completions.create({
+        model: "gpt-4o",
+        stream: true,
+        messages: [
+          {
+            role: "system",
+            content: system,
+          },
+          ...messages,
+        ],
       });
 
-      for await (const textPart of result.textStream) {
-        fullText += textPart;
+      let fullText = "";
+
+      for await (const chunk of stream) {
+        fullText += chunk.choices[0]?.delta?.content || "";
+
         ui.update(
           <>
             <Markdown content={fullText} />
