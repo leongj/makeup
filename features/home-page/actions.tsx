@@ -32,7 +32,7 @@ export const generateImageAltText = async (base: string) => {
       ],
     });
 
-    return chatCompletion.choices[0].message.content;
+    return chatCompletion.choices[0].message.content || "";
   } catch (error) {
     console.error("Error", error);
     return `There was an error`;
