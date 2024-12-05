@@ -1,7 +1,7 @@
 "use client";
 
 import { resolveAfter } from "@/features/common/util";
-import { RealTimeSystemPrompt } from "@/features/home-page/prompts";
+import { RealTimeSystemPrompt } from "@/features/product-description-page/prompts";
 import {
   disposeAudioPlayer,
   initAudioPlayer,
@@ -14,7 +14,7 @@ import {
   RealtimeCustomEvents,
   RealtimeServerEvents,
 } from "openai-realtime-api";
-import { generateImageDescription } from "../actions";
+import { realTimeImageDescription } from "../actions";
 import { capture } from "../camera/camera-store";
 import { isMuted, setLoading } from "./realtime-store";
 import { callWeather } from "./server-api";
@@ -184,7 +184,7 @@ const addInitialTools = () => {
       const photo = capture();
 
       if (photo) {
-        const response = await generateImageDescription({
+        const response = await realTimeImageDescription({
           image: photo,
           userRequest: task,
         });

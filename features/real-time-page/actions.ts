@@ -1,12 +1,13 @@
 "use server";
-import { AzureOpenAI } from "../home-page/azure";
+
+import { AzureOpenAI } from "../common/azure-openai/azure";
 
 interface Props {
   image: string;
   userRequest: string;
 }
 
-export const generateImageDescription = async (base: Props) => {
+export const realTimeImageDescription = async (base: Props) => {
   try {
     const client = AzureOpenAI();
 

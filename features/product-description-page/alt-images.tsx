@@ -13,7 +13,7 @@ export const AltImages = () => {
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <h1 className="text-2xl">Images</h1>
+      <h1 className="text-2xl font-medium  tracking-tight">Images</h1>
 
       <motion.div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {images.map((file, i) => (

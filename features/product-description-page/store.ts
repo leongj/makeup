@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { create } from "zustand";
+
 import { generateImageAltText, generateImageDescription } from "./actions";
 import { DescriptionSystemPrompt } from "./prompts";
 
@@ -17,6 +18,7 @@ export type ImageDescriptionState = {
 };
 
 type AppState = {
+  uploadRef: HTMLInputElement | null;
   files: FileList | null;
   altImages: ImageItemState[];
   imageDescription: ImageDescriptionState;
@@ -24,6 +26,7 @@ type AppState = {
 
 const initialState: AppState = {
   files: null,
+  uploadRef: null,
   altImages: [],
   imageDescription: {
     description: "",
@@ -39,6 +42,10 @@ export const useAltImages = () => {
 
 export const useImageDescription = () => {
   return useAppStore((state) => state.imageDescription);
+};
+
+export const setUploadRef = (ref: HTMLInputElement) => {
+  useAppStore.setState((state) => ({ ...state, uploadRef: ref }));
 };
 
 export const updateFiles = async (files: FileList) => {

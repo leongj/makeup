@@ -2,9 +2,9 @@
 
 import { createStreamableUI } from "ai/rsc";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import { AzureOpenAI } from "../common/azure-openai/azure";
 import { Loading } from "../common/loading";
 import { Markdown } from "../common/markdown";
-import { AzureOpenAI } from "./azure";
 import { AltTextSystemPrompt } from "./prompts";
 
 export const generateImageAltText = async (base: string) => {
