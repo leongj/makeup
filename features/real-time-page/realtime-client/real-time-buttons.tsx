@@ -11,7 +11,7 @@ import {
 } from "@/features/ui/app-icons";
 import { capture, toggleFacingMode } from "../camera/camera-store";
 import { connectRealtime, disconnectRealtime } from "./realtime-client";
-import { toggleMute, useRealtimeStore } from "./realtime-store";
+import { setMute, toggleMute, useRealtimeStore } from "./realtime-store";
 
 export const RealTimeButton = () => {
   const loading = useRealtimeStore((state) => state.loading);
@@ -35,21 +35,36 @@ export const RealTimeButton = () => {
         loading === "connecting" && "ring-orange-200 hover:bg-orange-50"
       )}
     >
-      <VoiceRobotIcon />
+      <VoiceRobotIcon /> {loading === "connected" ? "Disconnect" : "Connect"}
     </AppBarButton>
   );
 };
 
 export const RealTimeMuteButton = () => {
   const isMuted = useRealtimeStore((state) => state.isMuted);
+  const connected = useRealtimeStore((state) => state.loading) === "connected";
 
-  const onClick = () => {
-    toggleMute();
-  };
+  if (!connected) {
+    return null;
+  }
 
   return (
-    <AppBarButton onClick={onClick}>
+    <AppBarButton
+      onMouseDown={() => {
+        setMute(false);
+      }}
+      onMouseUp={() => {
+        setMute(true);
+      }}
+      onTouchStart={() => {
+        setMute(false);
+      }}
+      onTouchEnd={() => {
+        setMute(true);
+      }}
+    >
       {isMuted ? <VoiceMuteIcon /> : <VoiceIcon />}
+      {isMuted ? "Push to Talk" : "Talk"}
     </AppBarButton>
   );
 };

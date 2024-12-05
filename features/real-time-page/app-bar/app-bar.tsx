@@ -1,4 +1,5 @@
 "use client";
+import { HomeButton } from "@/features/home-page/home-button";
 import { AppBar } from "@/features/ui/app-bar/app-bar";
 import {
   RealTimeButton,
@@ -11,6 +12,7 @@ export const RealtimeAppBar = () => {
   const section = useAppBardSection();
   return (
     <AppBar section={section}>
+      <HomeButton />
       <RealTimeButton />
       <RealTimeMuteButton />
       <ToggleCameraButton />

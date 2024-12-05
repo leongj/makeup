@@ -45,12 +45,12 @@ export const AppBarButton = ({
   return (
     <button
       className={cn(
-        "overflow-hidden group rounded-2xl  hover:bg-violet-400/30 transition-all duration-500 outline-none focus:ring-2 ring-violet-500",
+        "overflow-hidden group rounded-full items-center justify-center flex  hover:bg-violet-400/30 transition-all duration-500 outline-none focus:ring-2 ring-violet-500",
         className
       )}
       {...props}
     >
-      <span className="flex gap-2 p-3 group-hover:scale-125 transform transition-transform duration-300">
+      <span className="flex gap-2 p-3 text-xs items-center text-violet-400 hover:text-violet-700">
         {children}
       </span>
     </button>

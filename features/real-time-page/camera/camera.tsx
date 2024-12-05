@@ -56,7 +56,7 @@ export const WebCamera: React.FC = () => {
         <Webcam
           ref={webcamRef}
           className="rounded-3xl"
-          mirrored={facingMode === "user"}
+          // mirrored={facingMode === "user"}
           videoConstraints={{
             facingMode: facingMode,
             aspectRatio: 11 / 16,

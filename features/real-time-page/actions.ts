@@ -25,7 +25,8 @@ export const realTimeImageDescription = async (base: Props) => {
           content: [
             {
               type: "text",
-              text: base.userRequest,
+              text:
+                base.userRequest + " \n .Extract all the text from the image.",
             },
             {
               type: "image_url",

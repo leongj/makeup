@@ -93,9 +93,9 @@ export const connectRealtime = async () => {
 const handleFunctionCallOutput = (
   event: RealtimeServerEvents.ConversationItemCreatedEvent
 ) => {
-  // if (event.item.type === "function_call_output") {
-  //   setDisplayResults(event.item.output);
-  // }
+  if (event.item.type === "function_call_output") {
+    console.log(event.item.output);
+  }
 };
 
 export const disconnectRealtime = async () => {
@@ -174,13 +174,6 @@ const addInitialTools = () => {
       },
     },
     async ({ task }: { task: string }) => {
-      console.log(task);
-      // realtimeClient.sendUserMessageContent([
-      //   {
-      //     type: "input_text",
-      //     text: `let the user know that I've taken a photo and ${task}. Also let them know that this might take bit of time so just hang tight. Say it in your own way.`,
-      //   },
-      // ]);
       const photo = capture();
 
       if (photo) {

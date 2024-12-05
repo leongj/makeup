@@ -23,7 +23,7 @@ export const useRealtimeStore = create<RealtimeState>()(() => ({
   displayResults: undefined,
   chatMessages: [],
   setMessages: undefined,
-  isMuted: false,
+  isMuted: true,
 }));
 
 export const isMuted = () => {
@@ -34,6 +34,12 @@ export const isMuted = () => {
 export const toggleMute = () => {
   const state = useRealtimeStore.getState();
   state.isMuted = !state.isMuted;
+  useRealtimeStore.setState(() => ({ ...state }));
+};
+
+export const setMute = (isMuted: boolean) => {
+  const state = useRealtimeStore.getState();
+  state.isMuted = isMuted;
   useRealtimeStore.setState(() => ({ ...state }));
 };
 
