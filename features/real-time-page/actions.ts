@@ -18,16 +18,17 @@ export const realTimeImageDescription = async (base: Props) => {
           role: "system",
           content:
             "Use this to analyze the image based on the user request: " +
-            base.userRequest,
+            base.userRequest +
+            " \nAccurately analyze the image and ensure to describe the scene." +
+            "\n .Extract all the text from the image. \n At the end you must provide a confidence score of low, medium, or high. If you are unsure, you can ask the user to hold the camera closer or further away.",
         },
         {
           role: "user",
           content: [
-            {
-              type: "text",
-              text:
-                base.userRequest + " \n .Extract all the text from the image.",
-            },
+            // {
+            //   type: "text",
+            //   text: base.userRequest,
+            // },
             {
               type: "image_url",
               image_url: {
@@ -38,7 +39,7 @@ export const realTimeImageDescription = async (base: Props) => {
         },
       ],
     });
-
+    console.log(chatCompletion.choices[0].message.content);
     return chatCompletion.choices[0].message.content;
   } catch (error) {
     console.error("Error", error);
