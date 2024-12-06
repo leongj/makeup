@@ -45,7 +45,7 @@ export const AppBarButton = ({
   return (
     <button
       className={cn(
-        "overflow-hidden group rounded-full items-center justify-center flex  hover:bg-violet-400/30 transition-all duration-500 outline-none focus:ring-2 ring-violet-500",
+        "select-none overflow-hidden group rounded-full items-center justify-center flex  hover:bg-violet-400/30 transition-all duration-500 outline-none focus:ring-2 ring-violet-500",
         className
       )}
       {...props}

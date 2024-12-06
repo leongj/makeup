@@ -11,7 +11,7 @@ import {
 } from "@/features/ui/app-icons";
 import { capture, toggleFacingMode } from "../camera/camera-store";
 import { connectRealtime, disconnectRealtime } from "./realtime-client";
-import { setMute, toggleMute, useRealtimeStore } from "./realtime-store";
+import { toggleMute, useRealtimeStore } from "./realtime-store";
 
 export const RealTimeButton = () => {
   const loading = useRealtimeStore((state) => state.loading);
@@ -49,22 +49,8 @@ export const RealTimeMuteButton = () => {
   }
 
   return (
-    <AppBarButton
-      onMouseDown={() => {
-        setMute(false);
-      }}
-      onMouseUp={() => {
-        setMute(true);
-      }}
-      onTouchStart={() => {
-        setMute(false);
-      }}
-      onTouchEnd={() => {
-        setMute(true);
-      }}
-    >
+    <AppBarButton onClick={toggleMute}>
       {isMuted ? <VoiceMuteIcon /> : <VoiceIcon />}
-      {isMuted ? "Push to Talk" : "Talk"}
     </AppBarButton>
   );
 };
