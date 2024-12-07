@@ -1,4 +1,4 @@
-import { AI } from "@/features/product-description-page/ai-context";
+import { AI } from "@/features/product-page/ai-context";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";

@@ -1,4 +1,4 @@
-import { LandingPage, Links } from "../product-description-page/header";
+import { LandingPage, Links } from "../product-page/header";
 
 export const HomePage = async () => {
   return (

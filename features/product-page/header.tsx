@@ -86,8 +86,8 @@ export const LandingPage = () => {
 export const Links = () => {
   const links = [
     {
-      name: "Product Description",
-      link: "/product-description",
+      name: "Product",
+      link: "/product",
     },
     {
       name: "Realtime",

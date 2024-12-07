@@ -1,6 +1,6 @@
 "use client";
 
-import { useAltImages, useImageDescription } from "./store";
+import { useAltImages, useImageDescription } from "../store";
 
 export const ImageDescription = () => {
   const images = useAltImages();

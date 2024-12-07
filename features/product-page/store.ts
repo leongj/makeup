@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
 import { create } from "zustand";
 
-import { generateImageAltText, generateImageDescription } from "./actions";
+import { generateImageAltText } from "./alt-text/actions-alt-text";
+import { generateProductDescription } from "./product-description/actions-product-description";
 import { DescriptionSystemPrompt } from "./prompts";
 
 export type ImageItemState = {
@@ -83,7 +84,7 @@ const startGeneratingDescription = async () => {
   }));
 
   try {
-    const result = await generateImageDescription({
+    const result = await generateProductDescription({
       images,
       system: state.imageDescription.system,
     });

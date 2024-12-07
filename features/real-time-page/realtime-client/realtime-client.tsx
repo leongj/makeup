@@ -1,7 +1,7 @@
 "use client";
 
 import { resolveAfter } from "@/features/common/util";
-import { RealTimeSystemPrompt } from "@/features/product-description-page/prompts";
+import { RealTimeSystemPrompt } from "@/features/product-page/prompts";
 import {
   disposeAudioPlayer,
   initAudioPlayer,

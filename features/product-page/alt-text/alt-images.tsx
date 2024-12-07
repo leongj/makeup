@@ -1,8 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { Loading } from "../common/loading";
-import { ImageItemState, useAltImages } from "./store";
+import { Loading } from "../../common/loading";
+import { ImageItemState, useAltImages } from "../store";
 
 export const AltImages = () => {
   const images = useAltImages();

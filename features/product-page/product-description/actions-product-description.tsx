@@ -2,49 +2,16 @@
 
 import { createStreamableUI } from "ai/rsc";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
-import { AzureOpenAI } from "../common/azure-openai/azure";
-import { Loading } from "../common/loading";
-import { Markdown } from "../common/markdown";
-import { AltTextSystemPrompt } from "./prompts";
-
-export const generateImageAltText = async (base: string) => {
-  try {
-    const client = AzureOpenAI();
-
-    const chatCompletion = await client.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: AltTextSystemPrompt,
-        },
-        {
-          role: "user",
-          content: [
-            {
-              type: "image_url",
-              image_url: {
-                url: `data:image/jpeg;base64 ${base}`,
-              },
-            },
-          ],
-        },
-      ],
-    });
-
-    return chatCompletion.choices[0].message.content || "";
-  } catch (error) {
-    console.error("Error", error);
-    return `There was an error`;
-  }
-};
+import { AzureOpenAI } from "../../common/azure-openai/azure";
+import { Loading } from "../../common/loading";
+import { Markdown } from "../../common/markdown";
 
 interface Props {
   system: string;
   images: string[];
 }
 
-export const generateImageDescription = async (props: Props) => {
+export const generateProductDescription = async (props: Props) => {
   const ui = createStreamableUI(<Loading />);
   const { system, images } = props;
 
