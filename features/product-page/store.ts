@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 import { generateImageAltText } from "./alt-text/actions-alt-text";
 import { generateProductDescription } from "./product-description/actions-product-description";
-import { DescriptionSystemPrompt } from "./prompts";
+import { DescriptionSystemPrompt } from "./product-description/prompt";
 
 export type ImageItemState = {
   base64: string;

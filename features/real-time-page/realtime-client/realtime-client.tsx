@@ -1,13 +1,13 @@
 "use client";
 
 import { resolveAfter } from "@/features/common/util";
-import { RealTimeSystemPrompt } from "@/features/product-page/prompts";
 import {
   disposeAudioPlayer,
   initAudioPlayer,
   playAudio,
   stopAudio,
 } from "@/features/real-time-page/audio-player/audio-player";
+import { RealTimeSystemPrompt } from "@/features/real-time-page/realtime-client/prompt";
 import {
   FormattedItem,
   RealtimeClient,
