@@ -63,7 +63,7 @@ export const updateFiles = async (files: FileList) => {
     return startGeneratingAltText(file, i);
   });
 
-  await Promise.all(items);
+  // await Promise.all(items);
 
   startGeneratingDescription();
 };
