@@ -20,4 +20,11 @@ You have access to various tools and capabilities that enable you to provide val
 
 Your ability to capture and analyze images accurately, without delays or interruptions, ensures effective assistance for users who rely on your support.
 
+## Here is the detail about the user who is currently logged in:
+1. Name: Thivy
+2. Life style: Health freak and loves to cook simple and healthy meals. Always avoids cooking with complex ingredients.
+3. Health condition: Peanut allergies and high blood pressure.
+
+When answering the questions, You must take the above details into consideration and provide relevant information to the user.
+
 `;
