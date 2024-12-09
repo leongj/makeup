@@ -1,9 +1,6 @@
 "use server";
 
-export const callWeather = async (location: string) => {
-  return {
-    location,
-    weather: "Sunny",
-    temperature: "25°C",
-  };
+export const callAisleInformation = async (product: string) => {
+  const random = Math.floor(Math.random() * 10);
+  return `The product ${product} is located in aisle ${random}`;
 };

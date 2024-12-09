@@ -17,7 +17,7 @@ import {
 import { realTimeImageDescription } from "../actions";
 import { capture } from "../camera/camera-store";
 import { isMuted, setLoading } from "./realtime-store";
-import { callWeather } from "./server-api";
+import { callAisleInformation } from "./server-api";
 
 let lastActiveAssistantItem: FormattedItem | null = null;
 
@@ -133,25 +133,34 @@ const handleErrors = (error: RealtimeServerEvents.ErrorEvent) => {
   }
 };
 
+export const sendUserMessage = (message: string) => {
+  realtimeClient.cancelResponse();
+  realtimeClient.sendUserMessageContent([
+    {
+      type: "input_text",
+      text: message,
+    },
+  ]);
+};
+
 const addInitialTools = () => {
   realtimeClient.addTool(
     {
-      name: "get_weather",
-      description: "Retrieves the weather for a given location",
+      name: "get_aisle",
+      description: "Retrieves aisle information for a particular product",
       parameters: {
         type: "object",
         properties: {
-          location: {
+          product: {
             type: "string",
-            description: "Name of the location",
+            description: "Name of the product",
           },
         },
-        required: ["location"],
+        required: ["product"],
       },
     },
-    async ({ location }: { location: string }) => {
-      console.log("Calling weather API");
-      return await callWeather(location);
+    async ({ product }: { product: string }) => {
+      return await callAisleInformation(product);
     }
   );
 
@@ -190,6 +199,18 @@ const addInitialTools = () => {
 };
 
 const greetUser = () => {
+  realtimeClient.updateSession({
+    instructions: RealTimeSystemPrompt,
+    turn_detection: {
+      type: "server_vad",
+      prefix_padding_ms: 200,
+      silence_duration_ms: 500,
+    },
+    input_audio_transcription: {
+      model: "whisper-1",
+    },
+  });
+
   setLoading("connected");
 
   const items: {

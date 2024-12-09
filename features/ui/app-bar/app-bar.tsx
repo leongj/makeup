@@ -29,7 +29,10 @@ export const AppBar = (props: Props) => {
         )}
       >
         <AnimatePresence>{section}</AnimatePresence>
-        <motion.div layout className="flex gap-1 items-center justify-center">
+        <motion.div
+          layout
+          className="flex gap-1 items-center justify-center relative"
+        >
           {children}
         </motion.div>
       </motion.div>
