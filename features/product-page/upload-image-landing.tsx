@@ -1,6 +1,6 @@
 "use client";
 
-import { ImageIcon } from "../ui/app-icons";
+import { UploadIcon } from "../ui/app-icons";
 import { useAppStore } from "./store";
 
 export const UploadImageLanding = () => {
@@ -17,10 +17,10 @@ export const UploadImageLanding = () => {
         onClick={() => {
           uploadRef?.click();
         }}
-        className="border border-violet-500 rounded-xl p-10 bg-violet-100 aspect-square min-w-[30%] text-violet-500 flex flex-col gap-8 justify-center items-center"
+        className="border border-violet-500 rounded-xl p-4 bg-violet-100 min-w-[30%] text-violet-500 flex flex-row gap-4 justify-center items-center"
       >
-        <ImageIcon size={100} />
-        <span className="text-sm">Click here to upload product images</span>
+        <UploadIcon size={24} />
+        <span className="text-sm">Upload image</span>
       </div>
     </div>
   );

@@ -235,3 +235,28 @@ export const HomeIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
+
+export const UploadIcon = (props: IconProps) => {
+  return (
+    <BaseIcon {...props}>
+      <g>
+        <path
+          className={cn(FILL_LIGHT_COLOR)}
+          d="M24 4v24m0 0l-8-8m8 8l8-8"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          className={cn(FILL_DARK_COLOR)}
+          d="M4 28h40v12H4z"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+    </BaseIcon>
+  );
+};
