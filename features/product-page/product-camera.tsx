@@ -1,9 +1,10 @@
 "use client";
 import { XIcon } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import React from "react";
 import Webcam from "react-webcam";
-import { clearScreenshot, useCameraStore } from "../real-time-page/camera/camera-store";
+import { capture, clearScreenshot, useCameraStore } from "../real-time-page/camera/camera-store";
+import { processScreenshot } from "./store";
 
 export const Screenshot = () => {
   const screenshot = useCameraStore((s) => s.screenshot);
@@ -41,29 +42,51 @@ export const Screenshot = () => {
 export const ProductCamera: React.FC = () => {
   const webcamRef = useCameraStore((s) => s.webcamRef);
   const facingMode = useCameraStore((s) => s.facingMode);
+  const screenshot = useCameraStore((s) => s.screenshot);
 
   return (
     <div className="relative flex flex-col items-center justify-center">
-      <div
-        className="relative cursor-pointer"
-        onClick={() => {
-          const { capture } = require("../real-time-page/camera/camera-store");
-          capture();
-        }}
-      >
-        <Webcam
-          ref={webcamRef}
-          className="rounded-3xl"
-          // mirrored={facingMode === "user"}
-          videoConstraints={{
-            facingMode: facingMode,
-            aspectRatio: 11 / 16,
-            height: 600,
-          }}
-        />
-        <AnimatePresence>
-          <Screenshot />
-        </AnimatePresence>
+      <div className="relative">
+        {screenshot ? (
+          <div className="relative">
+            <img
+              src={screenshot}
+              alt="captured image"
+              className="rounded-3xl"
+            />
+            <div className="absolute top-0 right-0 p-2">
+              <motion.button
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.4 }}
+                onClick={clearScreenshot}
+                className="bg-slate-50 rounded-full size-6 flex items-center justify-center"
+              >
+                <XIcon size={14} />
+              </motion.button>
+            </div>
+          </div>
+        ) : (
+          <div
+            className="relative cursor-pointer"
+            onClick={async () => {
+              const img = capture();
+              if (img) {
+                await processScreenshot(img);
+              }
+            }}
+          >
+            <Webcam
+              ref={webcamRef}
+              className="rounded-3xl"
+              videoConstraints={{
+                facingMode: facingMode,
+                aspectRatio: 11 / 16,
+                height: 600,
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

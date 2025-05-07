@@ -9,8 +9,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Focal",
-  description: "Multimodal AI App to gain insights from images",
+  title: "Lipstick",
+  description: "Multimodal AI App to help find your lipstick shade",
 };
 
 export default function RootLayout({

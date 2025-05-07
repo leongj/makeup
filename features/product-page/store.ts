@@ -75,6 +75,36 @@ export const updateSystemPrompt = (system: string) => {
   }));
 };
 
+export const processScreenshot = async (screenshot: string) => {
+  // Reset state and prepare for new image processing
+  useAppStore.setState((state) => ({
+    ...initialState,
+    files: null,
+    altImages: [],
+    imageDescription: { ...state.imageDescription, description: "" },
+  }));
+  // Create new image entry
+  const imageItem: ImageItemState = {
+    base64: screenshot,
+    url: screenshot,
+    isLoading: true,
+    result: "",
+    index: 0,
+  };
+  updateImageByIndex(0, imageItem);
+  // Generate alt text for the screenshot
+  try {
+    const altResult = await generateImageAltText(screenshot);
+    imageItem.result = altResult;
+    imageItem.isLoading = false;
+    updateImageByIndex(0, imageItem);
+  } catch (error) {
+    console.error(error);
+  }
+  // Trigger product description generation
+  startGeneratingDescription();
+};
+
 const startGeneratingDescription = async () => {
   const state = useAppStore.getState();
   const images = state.altImages.map((image) => image.base64);

@@ -2,12 +2,14 @@
 
 import { UploadIcon } from "../ui/app-icons";
 import { useAppStore } from "./store";
+import { useCameraStore } from "../real-time-page/camera/camera-store";
 
 export const UploadImageLanding = () => {
   const uploadRef = useAppStore((state) => state.uploadRef);
   const altImages = useAppStore((state) => state.altImages);
+  const screenshot = useCameraStore((s) => s.screenshot);
 
-  if (altImages.length) {
+  if (altImages.length || screenshot) {
     return null;
   }
 
