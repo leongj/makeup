@@ -4,8 +4,7 @@ import * as motion from "motion/react-client";
 import Link from "next/link";
 import { useAltImages } from "./store";
 
-const TagLine =
-  "Generate alt text and descriptions for images using Azure OpenAI";
+const TagLine = "Demo powered by Microsoft AI";
 
 export const Header = () => {
   const images = useAltImages();
@@ -28,7 +27,7 @@ export const Header = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-xl md:text-4xl font-semibold"
         >
-          Focal
+          <span> Lipstick</span>
         </motion.h1>
         <motion.h4
           initial={{ opacity: 0, y: -10 }}
@@ -65,7 +64,7 @@ export const LandingPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex gap-4 items-center col-start-2 col-span-10 text-6xl font-semibold bg-gradient-to-r from-violet-500  to-blue-500 bg-clip-text text-transparent"
         >
-          <span> Focal</span>
+          <span> Lipstick</span>
         </motion.h1>
         <motion.h1
           initial={{ opacity: 0, y: -10 }}
@@ -75,7 +74,7 @@ export const LandingPage = () => {
         >
           Demo powered by{" "}
           <span className="font-semibold bg-gradient-to-r from-violet-500  to-blue-500 bg-clip-text text-transparent">
-            Azure OpenAI
+            Microsoft AI
           </span>
         </motion.h1>
       </div>
@@ -86,12 +85,8 @@ export const LandingPage = () => {
 export const Links = () => {
   const links = [
     {
-      name: "Product",
+      name: "Find my colour",
       link: "/product",
-    },
-    {
-      name: "Realtime",
-      link: "/real-time",
     },
   ];
 
