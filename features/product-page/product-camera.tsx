@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import React from "react";
 import Webcam from "react-webcam";
 import { capture, clearScreenshot, useCameraStore } from "../real-time-page/camera/camera-store";
-import { processScreenshot } from "./store";
+import { processCapture } from "./store";
 
 export const Screenshot = () => {
   const screenshot = useCameraStore((s) => s.screenshot);
@@ -72,7 +72,7 @@ export const ProductCamera: React.FC = () => {
             onClick={async () => {
               const img = capture();
               if (img) {
-                await processScreenshot(img);
+                await processCapture(img);
               }
             }}
           >

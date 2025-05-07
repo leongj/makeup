@@ -18,7 +18,7 @@ export const ProductPage = async () => {
             <UploadImageLanding />
           </div>
         </div>
-        <AltImages />
+        {/* <AltImages /> */}
         <ImageDescription />
       </div>
       <HomeAppBar />
