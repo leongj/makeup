@@ -1,7 +1,7 @@
 "use client";
 import { XIcon } from "lucide-react";
 import { motion } from "motion/react";
-import React from "react";
+import React, { useState } from "react";
 import Webcam from "react-webcam";
 import { capture, clearScreenshot, useCameraStore } from "../real-time-page/camera/camera-store";
 
@@ -46,14 +46,37 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
   const webcamRef = useCameraStore((s) => s.webcamRef);
   const facingMode = useCameraStore((s) => s.facingMode);
   const screenshot = useCameraStore((s) => s.screenshot);
+  const [flash, setFlash] = useState(false);
+  const [capturedImg, setCapturedImg] = useState<string | null>(null);
+
+  const handleCapture = async () => {
+    setFlash(true);
+    // Step 1: Flash white, then fade out
+    setTimeout(() => {
+      const img = capture();
+      if (img) {
+        setCapturedImg(img);
+      }
+      setFlash(false);
+      // Step 2: Pause for 0.5s before moving to next page
+      setTimeout(() => {
+        if (img && onPhotoCaptured) {
+          onPhotoCaptured(img);
+        }
+      }, 500);
+    }, 180); // flash duration
+  };
+
+  // Show the captured image if present, otherwise use the screenshot from store
+  const displayImg = capturedImg || screenshot;
 
   return (
     <div className="relative flex flex-col items-center justify-center">
       <div className="relative">
-        {screenshot ? (
+        {displayImg ? (
           <div className="relative">
             <img
-              src={screenshot}
+              src={displayImg}
               alt="captured image"
               className="rounded-3xl"
             />
@@ -62,7 +85,10 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.4 }}
-                onClick={clearScreenshot}
+                onClick={() => {
+                  clearScreenshot();
+                  setCapturedImg(null);
+                }}
                 className="bg-slate-50 rounded-full size-6 flex items-center justify-center"
               >
                 <XIcon size={14} />
@@ -72,14 +98,7 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
         ) : (
           <div
             className="relative cursor-pointer"
-            onClick={async () => {
-              const img = capture();
-              if (img) {
-                if (onPhotoCaptured) {
-                  onPhotoCaptured(img);
-                }
-              }
-            }}
+            onClick={handleCapture}
           >
             <Webcam
               ref={webcamRef}
@@ -90,6 +109,16 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
                 height: 600,
               }}
             />
+            {/* Flash overlay */}
+            {flash && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 1, 0] }}
+                transition={{ duration: 0.18, ease: "easeIn" }}
+                className="absolute inset-0 rounded-3xl pointer-events-none"
+                style={{ background: "white" }}
+              />
+            )}
           </div>
         )}
       </div>

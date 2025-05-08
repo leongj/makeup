@@ -1,6 +1,7 @@
 "use client";
 
 import { useAltImages, useImageDescription } from "../store";
+import { dressTypeLabels } from "../dress-types";
 
 interface ImageDescriptionProps {
   imageSrc: string | null;
@@ -29,9 +30,6 @@ export const ImageDescription: React.FC<ImageDescriptionProps> = ({
     <div className="flex flex-col gap-4 py-4 items-center">
       {imageSrc && (
         <div className="mb-4">
-          <h2 className="text-xl font-semibold text-slate-700 mb-2">
-            Captured Image:
-          </h2>
           <img
             src={imageSrc}
             alt="Captured forearm"
@@ -42,9 +40,11 @@ export const ImageDescription: React.FC<ImageDescriptionProps> = ({
       {dressType && (
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-slate-700 mb-2">
-            Selected Occasion:
+            Occasion:
           </h2>
-          <p className="text-lg text-slate-600">{dressType}</p>
+          <p className="text-lg text-slate-600 text-center">
+            {dressTypeLabels[dressType] || dressType}
+          </p>
         </div>
       )}
 
@@ -62,7 +62,6 @@ export const ImageDescription: React.FC<ImageDescriptionProps> = ({
             : "Please complete previous steps."}
         </p>
       )}
-
     </div>
   );
 };

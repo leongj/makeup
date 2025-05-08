@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 import { generateImageAltText } from "./alt-text/actions-alt-text";
 import { generateProductDescription } from "./product-description/actions-product-description";
-import { DescriptionSystemPrompt } from "./product-description/prompt";
+import { DescriptionSystemPrompt, RecommendationSystemPrompt } from "./product-description/prompt"; // Import the new prompt
 import { Loading } from "../common/loading"; // Import Loading component
 
 export type ImageItemState = {
@@ -78,6 +78,11 @@ export const updateSystemPrompt = (system: string) => {
   }));
 };
 
+// Reset the app state to its initial values (useful when navigating home)
+export const resetAppStore = () => {
+  useAppStore.setState(() => initialState);
+};
+
 // New function to generate recommendation based on image and occasion
 export const generateRecommendationForOccasion = async (base64Image: string, occasion: string) => {
   // Reset state and prepare for new image processing
@@ -117,7 +122,7 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
     console.error("Error processing static image /ct-hotlips.jpg:", error);
   }
 
-  const dynamicSystemPrompt = `Based on the provided forearm image for skin tone analysis and the occasion being '${occasion}', please recommend a suitable lipstick shade. Provide a brief explanation for your choice.`;
+  const dynamicSystemPrompt = RecommendationSystemPrompt.replace("{occasion}", occasion);
 
   try {
     // Now we get both images from the altImages state

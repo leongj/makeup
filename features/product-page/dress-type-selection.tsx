@@ -1,14 +1,10 @@
 "use client";
 
+import { dressOptions } from "./dress-types";
+
 interface DressTypeSelectionProps {
   onSelectDressType: (dressType: string) => void;
 }
-
-const dressOptions = [
-  { id: "everyday", label: "Everyday" },
-  { id: "fancy_dinner", label: "Fancy Dinner" },
-  { id: "date_night", label: "Date Night" },
-];
 
 export const DressTypeSelection: React.FC<DressTypeSelectionProps> = ({ onSelectDressType }) => {
   return (

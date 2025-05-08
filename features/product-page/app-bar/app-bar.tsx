@@ -11,14 +11,6 @@ export const HomeAppBar = () => {
   return (
     <AppBar section={section}>
       <HomeButton />
-      <UploadImage />
-      <AppBarButton
-        onClick={() => {
-          showAppBarSection(<SettingsSection />);
-        }}
-      >
-        <SettingsIcon />
-      </AppBarButton>
     </AppBar>
   );
 };
