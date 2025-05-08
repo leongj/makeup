@@ -37,10 +37,16 @@ export const generateProductDescription = async (props: Props) => {
 
       // log the messages to console, but don't print the base64 data
       console.log("System message:", system);
-
       messages.forEach((message) => {
-        if (message.role === "user" && message.content[0]?.type === "image_url") {
-        console.log("User message: [image_data]");
+        const content = message.content?.[0];
+        if (
+          message.role === "user" &&
+          typeof content === "object" &&
+          content !== null &&
+          "type" in content &&
+          content.type === "image_url"
+        ) {
+          console.log("User message: [image_data]");
         } else {
           console.log("User message:", message);
         }
