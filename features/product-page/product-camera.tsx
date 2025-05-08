@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 import React from "react";
 import Webcam from "react-webcam";
 import { capture, clearScreenshot, useCameraStore } from "../real-time-page/camera/camera-store";
-import { processCapture } from "./store";
 
 export const Screenshot = () => {
   const screenshot = useCameraStore((s) => s.screenshot);
@@ -39,7 +38,11 @@ export const Screenshot = () => {
   );
 };
 
-export const ProductCamera: React.FC = () => {
+interface ProductCameraProps {
+  onPhotoCaptured?: (imageSrc: string) => void;
+}
+
+export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured }) => {
   const webcamRef = useCameraStore((s) => s.webcamRef);
   const facingMode = useCameraStore((s) => s.facingMode);
   const screenshot = useCameraStore((s) => s.screenshot);
@@ -72,7 +75,9 @@ export const ProductCamera: React.FC = () => {
             onClick={async () => {
               const img = capture();
               if (img) {
-                await processCapture(img);
+                if (onPhotoCaptured) {
+                  onPhotoCaptured(img);
+                }
               }
             }}
           >

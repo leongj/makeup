@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { generateImageAltText } from "./alt-text/actions-alt-text";
 import { generateProductDescription } from "./product-description/actions-product-description";
 import { DescriptionSystemPrompt } from "./product-description/prompt";
+import { Loading } from "../common/loading"; // Import Loading component
 
 export type ImageItemState = {
   base64: string;
@@ -16,6 +17,7 @@ export type ImageItemState = {
 export type ImageDescriptionState = {
   description: ReactNode;
   system: string;
+  isLoading: boolean; // Added isLoading
 };
 
 type AppState = {
@@ -32,6 +34,7 @@ const initialState: AppState = {
   imageDescription: {
     description: "",
     system: DescriptionSystemPrompt,
+    isLoading: false, // Initialized isLoading
   },
 };
 
@@ -73,6 +76,77 @@ export const updateSystemPrompt = (system: string) => {
     ...state,
     imageDescription: { ...state.imageDescription, system },
   }));
+};
+
+// New function to generate recommendation based on image and occasion
+export const generateRecommendationForOccasion = async (base64Image: string, occasion: string) => {
+  // Reset state and prepare for new image processing
+  useAppStore.setState((state) => ({
+    ...initialState,
+    files: null,
+    altImages: [],
+    imageDescription: {
+      ...state.imageDescription,
+      description: "", // Clear previous description
+      isLoading: true,
+    },
+  }));
+
+  // Create new image entry for the captured forearm image
+  const capturedImageItem: ImageItemState = {
+    base64: base64Image,
+    url: base64Image,
+    isLoading: false,
+    result: "Forearm image for skin tone analysis",
+    index: 0,
+  };
+  updateImageByIndex(0, capturedImageItem);
+
+  // Fetch and process the static hotlips image, just like in processCapture
+  try {
+    const staticImageData = await urlToBase64("/ct-hotlips.jpg");
+    const staticImageItem: ImageItemState = {
+      base64: staticImageData.base64,
+      url: staticImageData.url,
+      isLoading: false,
+      result: "CT Hotlips product image",
+      index: 1,
+    };
+    updateImageByIndex(1, staticImageItem);
+  } catch (error) {
+    console.error("Error processing static image /ct-hotlips.jpg:", error);
+  }
+
+  const dynamicSystemPrompt = `Based on the provided forearm image for skin tone analysis and the occasion being '${occasion}', please recommend a suitable lipstick shade. Provide a brief explanation for your choice.`;
+
+  try {
+    // Now we get both images from the altImages state
+    const images = useAppStore.getState().altImages.map(image => image.base64);
+    
+    const result = await generateProductDescription({
+      images: images, // Send both the forearm image and hotlips product image
+      system: dynamicSystemPrompt,
+    });
+
+    useAppStore.setState((state) => ({
+      ...state,
+      imageDescription: {
+        ...state.imageDescription,
+        description: result, // This is the streamable UI
+        isLoading: false, // Set to false as the stream itself will complete
+      },
+    }));
+  } catch (error) {
+    console.error("Error generating recommendation:", error);
+    useAppStore.setState((state) => ({
+      ...state,
+      imageDescription: {
+        ...state.imageDescription,
+        description: "Failed to generate recommendation.", // Show error message
+        isLoading: false,
+      },
+    }));
+  }
 };
 
 export const processCapture = async (capturedImageBase64: string) => {
@@ -122,32 +196,49 @@ export const processCapture = async (capturedImageBase64: string) => {
   }
 
   // Trigger product description generation
-  startGeneratingDescription();
+  // startGeneratingDescription(); // We will call generateRecommendationForOccasion from ProductPage instead
 };
 
 const startGeneratingDescription = async () => {
+  // This function might need to be re-evaluated or deprecated if
+  // generateRecommendationForOccasion is the primary way to get descriptions.
+  // For now, let's assume it might still be used by updateFiles flow.
   const state = useAppStore.getState();
-  const images = state.altImages.map((image) => image.base64);
-  useAppStore.setState(() => ({
-    ...state,
-    imageDescription: { ...state.imageDescription },
+  if (state.altImages.length === 0) {
+    console.warn("startGeneratingDescription called with no images in altImages.");
+    return;
+  }
+  useAppStore.setState((s) => ({ // Renamed state to s to avoid conflict
+    ...s,
+    imageDescription: { ...s.imageDescription, isLoading: true, description: "" },
   }));
+
+  const images = state.altImages.map((image) => image.base64);
 
   try {
     const result = await generateProductDescription({
       images,
-      system: state.imageDescription.system,
+      system: state.imageDescription.system, // Uses the default system prompt here
     });
 
-    useAppStore.setState(() => ({
-      ...state,
+    useAppStore.setState((s) => ({ // Renamed state to s
+      ...s,
       imageDescription: {
-        ...state.imageDescription,
+        ...s.imageDescription,
         description: result,
+        isLoading: false,
       },
     }));
   } catch (error) {
     console.error(error);
+    useAppStore.setState((s) => ({ // Renamed state to s
+      ...s,
+      imageDescription: {
+        ...s.imageDescription,
+        description: "Failed to generate description.",
+        isLoading: false,
+      },
+    }));
   }
 };
 
