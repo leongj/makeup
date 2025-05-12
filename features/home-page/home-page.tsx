@@ -22,7 +22,7 @@ export const HomePage = () => {
       className="h-svh max-h-svh text-slate-500 cursor-pointer" // Added cursor-pointer
       onClick={handleNavigation} // Added onClick handler
     >
-      <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col pb-28  min-h-full items-center justify-center gap-6">
+      <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col min-h-full items-center justify-center gap-6">
         <LandingPage />
         <Links />
       </div>

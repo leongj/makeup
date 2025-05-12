@@ -63,6 +63,7 @@ export const LandingPage = () => {
         <motion.h1
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
           className="flex gap-4 items-center col-start-2 col-span-10 text-6xl font-semibold bg-gradient-to-r from-red-500 to-red-800 bg-clip-text text-transparent" // Changed to red gradient
         >
           <span>Lipstick</span>
@@ -70,7 +71,7 @@ export const LandingPage = () => {
         <motion.h1
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.4 }}
           className="text-xl "
         >
           Powered by{" "}
@@ -86,8 +87,22 @@ export const LandingPage = () => {
 export const Links = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-2 py-6 text-center">
-      <p className="text-2xl font-semibold text-red-600 mt-6 mb-4">Let's find your perfect colour</p>
-      <p className="text-xl text-red-800">Tap anywhere to start</p>
+      <motion.p
+        initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
+        animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+        transition={{ delay: 1 }}
+        className="text-2xl font-semibold text-red-600 mt-6 mb-4"
+      >
+        Let's find your perfect colour
+      </motion.p>
+      <motion.p
+        initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
+        animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+        transition={{ delay: 1.2 }}
+        className="text-xl text-red-800"
+      >
+        Tap anywhere to start
+      </motion.p>
     </div>
   );
 };
