@@ -48,9 +48,7 @@ export const ImageDescription: React.FC<ImageDescriptionProps> = ({
         </div>
       )}
 
-      <h2 className="text-xl font-semibold text-slate-700 mt-4 mb-2">
-        AI Recommendation:
-      </h2>
+      {/* AI Recommendation: */}
       {imageDescription.description ? (
         <div className="container mx-auto max-w-2xl flex flex-col bg-slate-50 p-4 rounded-lg shadow">
           {imageDescription.description}

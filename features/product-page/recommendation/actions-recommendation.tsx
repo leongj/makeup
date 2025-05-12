@@ -11,7 +11,7 @@ interface Props {
   images: string[];
 }
 
-export const generateProductDescription = async (props: Props) => {
+export const generateRecommendation = async (props: Props) => {
   const ui = createStreamableUI(<Loading />);
   const { system, images } = props;
 

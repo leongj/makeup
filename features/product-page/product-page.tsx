@@ -4,7 +4,7 @@ import { useState, useLayoutEffect } from "react";
 import { AltImages } from "./alt-text/alt-images";
 import { HomeAppBar } from "./app-bar/app-bar";
 import { ProductCamera } from "./product-camera";
-import { ImageDescription } from "./product-description/product-description";
+import { ImageDescription } from "./recommendation/recommendation";
 import { UploadImageLanding } from "./upload-image-landing";
 import { DressTypeSelection } from "./dress-type-selection";
 import { generateRecommendationForOccasion, useImageDescription, resetAppStore } from "./store";

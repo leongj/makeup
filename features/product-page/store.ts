@@ -2,8 +2,8 @@ import { ReactNode } from "react";
 import { create } from "zustand";
 
 import { generateImageAltText } from "./alt-text/actions-alt-text";
-import { generateProductDescription } from "./product-description/actions-product-description";
-import { DescriptionSystemPrompt, RecommendationSystemPrompt } from "./product-description/prompt"; // Import the new prompt
+import { generateRecommendation } from "./recommendation/actions-recommendation";
+import { DescriptionSystemPrompt, RecommendationSystemPrompt } from "./recommendation/prompt"; // Import the new prompt
 import { Loading } from "../common/loading"; // Import Loading component
 
 export type ImageItemState = {
@@ -68,7 +68,7 @@ export const updateFiles = async (files: FileList) => {
 
   await Promise.all(items);
 
-  startGeneratingDescription();
+  startGeneratingRecommendation();
 };
 
 export const updateSystemPrompt = (system: string) => {
@@ -128,7 +128,7 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
     // Now we get both images from the altImages state
     const images = useAppStore.getState().altImages.map(image => image.base64);
     
-    const result = await generateProductDescription({
+    const result = await generateRecommendation({
       images: images, // Send both the forearm image and swatch product image
       system: dynamicSystemPrompt,
     });
@@ -204,13 +204,13 @@ export const processCapture = async (capturedImageBase64: string) => {
   // startGeneratingDescription(); // We will call generateRecommendationForOccasion from ProductPage instead
 };
 
-const startGeneratingDescription = async () => {
+const startGeneratingRecommendation = async () => {
   // This function might need to be re-evaluated or deprecated if
   // generateRecommendationForOccasion is the primary way to get descriptions.
   // For now, let's assume it might still be used by updateFiles flow.
   const state = useAppStore.getState();
   if (state.altImages.length === 0) {
-    console.warn("startGeneratingDescription called with no images in altImages.");
+    console.warn("startGeneratingRecommendation called with no images in altImages.");
     return;
   }
   useAppStore.setState((s) => ({ // Renamed state to s to avoid conflict
@@ -221,7 +221,7 @@ const startGeneratingDescription = async () => {
   const images = state.altImages.map((image) => image.base64);
 
   try {
-    const result = await generateProductDescription({
+    const result = await generateRecommendation({
       images,
       system: state.imageDescription.system, // Uses the default system prompt here
     });

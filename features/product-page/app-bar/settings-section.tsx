@@ -2,7 +2,7 @@
 import { Eraser, Save, Undo2, X } from "lucide-react";
 import { motion } from "motion/react";
 import { ButtonHTMLAttributes, useState } from "react";
-import { DescriptionSystemPrompt } from "../product-description/prompt";
+import { DescriptionSystemPrompt } from "../recommendation/prompt";
 import { updateSystemPrompt, useImageDescription } from "../store";
 import { closeAppBarSection } from "./app-bar-store";
 
