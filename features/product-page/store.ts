@@ -107,19 +107,19 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
   };
   updateImageByIndex(0, capturedImageItem);
 
-  // Fetch and process the static hotlips image, just like in processCapture
+  // Fetch and process the static swatch image, just like in processCapture
   try {
-    const staticImageData = await urlToBase64("/ct-hotlips.jpg");
+    const staticImageData = await urlToBase64("/ct-hotlips-swatch.jpg");
     const staticImageItem: ImageItemState = {
       base64: staticImageData.base64,
       url: staticImageData.url,
       isLoading: false,
-      result: "CT Hotlips product image",
+      result: "Product swatch image",
       index: 1,
     };
     updateImageByIndex(1, staticImageItem);
   } catch (error) {
-    console.error("Error processing static image /ct-hotlips.jpg:", error);
+    console.error("Error processing swatch image: ", error);
   }
 
   const dynamicSystemPrompt = RecommendationSystemPrompt.replace("{occasion}", occasion);
@@ -129,7 +129,7 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
     const images = useAppStore.getState().altImages.map(image => image.base64);
     
     const result = await generateProductDescription({
-      images: images, // Send both the forearm image and hotlips product image
+      images: images, // Send both the forearm image and swatch product image
       system: dynamicSystemPrompt,
     });
 
@@ -184,19 +184,19 @@ export const processCapture = async (capturedImageBase64: string) => {
     updateImageByIndex(0, capturedImageItem); // Ensure loading state is updated even on error
   }
 
-  // Fetch and process the static image /ct-hotlips.jpg
+  // Fetch and process the swatch image
   try {
-    const staticImageData = await urlToBase64("/ct-hotlips.jpg");
+    const staticImageData = await urlToBase64("/ct-hotlips-swatch.jpg");
     const staticImageItem: ImageItemState = {
       base64: staticImageData.base64,
       url: staticImageData.url,
       isLoading: false, // Static image, no async processing needed here
-      result: "CT Hotlips product image", // Predefined alt text
+      result: "Product swatch image", // Predefined alt text
       index: 1, // Assign a new index
     };
     updateImageByIndex(1, staticImageItem);
   } catch (error) {
-    console.error("Error processing static image /ct-hotlips.jpg:", error);
+    console.error("Error processing swatch image:", error);
     // Optionally, handle the error, e.g., by not adding the image or adding a placeholder
   }
 
