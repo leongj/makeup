@@ -2,6 +2,7 @@
 import { ArrowRight } from "lucide-react";
 import * as motion from "motion/react-client";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Added import
 import { useAltImages } from "./store";
 
 const TagLine = "Demo powered by Microsoft AI";
@@ -83,32 +84,10 @@ export const LandingPage = () => {
 };
 
 export const Links = () => {
-  const links = [
-    {
-      name: "Find my colour",
-      link: "/product",
-    },
-  ];
-
   return (
-    <div className="flex gap-4 py-6">
-      {links.map((link) => (
-        <MotionLink
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          href={link.link}
-          key={link.name}
-          className="group p-2 px-4 bg-white hover:bg-red-100 hover:text-red-500 transition-all shadow-lg rounded-full border-red-600/45 border-2 text-sm flex gap-2 items-center"
-        >
-          {link.name}
-          <ArrowRight
-            size={16}
-            className="text-red-600 transform group-hover:scale-125 transition-transform duration-200"
-          />
-        </MotionLink>
-      ))}
+    <div className="flex flex-col items-center justify-center gap-2 py-6 text-center">
+      <p className="text-2xl font-semibold text-red-600 mt-6 mb-4">Let's find your perfect colour</p>
+      <p className="text-xl text-red-800">Tap anywhere to start</p>
     </div>
   );
 };
-
-const MotionLink = motion.create(Link);
