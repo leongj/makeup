@@ -35,8 +35,8 @@ export const generateRecommendation = async (props: Props) => {
         }
       );
 
-      // log the messages to console, but don't print the base64 data
-      console.log("System message:", system);
+      // DEBUG log the messages to console, but don't print the base64 data
+      console.log("==== DEBUG System message:", system);
       messages.forEach((message) => {
         const content = message.content?.[0];
         if (
