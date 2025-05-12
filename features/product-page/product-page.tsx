@@ -56,15 +56,16 @@ export const ProductPage = () => {
 
   return (
     <div className=" h-svh max-h-svh text-slate-500">
-      <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col pb-28 pt-10 min-h-full gap-6">
+      <HomeAppBar />
+      <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col pt-36 min-h-full gap-6">
         {workflowStep === "photo" && (
           <FadeIn>
             <>
               <h1 className="text-2xl font-semibold text-center text-slate-700">
-                Take a photo of your forearm to get your skin tone<br />
-                (click the screen to take a photo)
+                Start by taking a selfie<br />
+                (click anywhere to take a photo)
               </h1>
-              <div className="flex flex-col justify-center items-center w-full">
+              <div className="flex flex-col pt-10 justify-center items-center w-full">
                 {/* Pass handlePhotoTaken to ProductCamera */}
                 <ProductCamera onPhotoCaptured={handlePhotoTaken} />
                 {/* <div className="mt-4"> */}
@@ -99,7 +100,7 @@ export const ProductPage = () => {
         )}
 
       </div>
-      <HomeAppBar />
+      {/* <HomeAppBar /> */}
     </div>
   );
 };

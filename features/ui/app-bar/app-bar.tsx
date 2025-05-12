@@ -10,7 +10,7 @@ interface Props extends PropsWithChildren {
 export const AppBar = (props: Props) => {
   const { section, children } = props;
   return (
-    <div className="fixed left-0 bottom-0 w-full flex justify-center p-4  ">
+    <div className="fixed left-0 top-0 w-full flex justify-center p-4  ">
       <motion.div
         layout
         initial={{ opacity: 0, y: 45 }}
@@ -48,12 +48,12 @@ export const AppBarButton = ({
   return (
     <button
       className={cn(
-        "select-none overflow-hidden group rounded-full items-center justify-center flex  hover:bg-violet-400/30 transition-all duration-500 outline-none focus:ring-2 ring-violet-500",
+        "select-none overflow-hidden group rounded-full items-center justify-center flex  hover:bg-red-400/30 transition-all duration-500 outline-none focus:ring-2 ring-red-500",
         className
       )}
       {...props}
     >
-      <span className="flex gap-2 p-3 text-xs items-center text-violet-400 hover:text-violet-700">
+      <span className="flex gap-2 p-3 text-xs items-center text-red-400 hover:text-red-700">
         {children}
       </span>
     </button>
