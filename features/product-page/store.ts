@@ -122,15 +122,13 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
     console.error("Error processing swatch image: ", error);
   }
 
-  const dynamicSystemPrompt = RecommendationSystemPrompt.replace("{occasion}", occasion);
-
   try {
     // Now we get both images from the altImages state
     const images = useAppStore.getState().altImages.map(image => image.base64);
     
     const result = await generateRecommendation({
       images: images, // Send both the forearm image and swatch product image
-      system: dynamicSystemPrompt,
+      occasion: occasion,
     });
 
     useAppStore.setState((state) => ({
@@ -223,7 +221,8 @@ const startGeneratingRecommendation = async () => {
   try {
     const result = await generateRecommendation({
       images,
-      system: state.imageDescription.system, // Uses the default system prompt here
+      // TODO: Decide how to handle 'occasion' for this flow or deprecate this function
+      occasion: "general use", // Added a default occasion, this needs review
     });
 
     useAppStore.setState((s) => ({ // Renamed state to s

@@ -2,32 +2,98 @@
 
 import { createStreamableUI } from "ai/rsc";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
-import { AzureOpenAI } from "../../common/azure-openai/azure";
+import { AzureOpenAI } from "../../common/azure-openai/azure"; // Corrected path
 import { Loading } from "../../common/loading";
 import { Markdown } from "../../common/markdown";
+import { LIPSTICK_PRODUCTS, Product } from "../products";
+import { RecommendationSystemPrompt } from "./prompt";
+import fs from "fs";
+import path from "path";
 
 interface Props {
-  system: string;
-  images: string[];
+  images: string[]; // Expects user's selfie as images[0] (as data URL string)
+  occasion: string;
 }
+
+// Helper function to extract raw base64 data and MIME type from a data URL
+const processDataUrl = (dataUrl: string): { base64: string; mimeType: string } => {
+  const match = dataUrl.match(/^data:(image\/[^;]+);base64,(.+)$/);
+  if (match && match[1] && match[2]) {
+    return { mimeType: match[1], base64: match[2] };
+  }
+  // Fallback if it's not a valid data URL or already raw (though less likely for user image)
+  console.warn("processDataUrl did not find a valid data URL prefix, assuming raw or incorrect format:", dataUrl.substring(0,50));
+  return { mimeType: 'image/jpeg', base64: dataUrl }; // Default MIME type, might cause issues if incorrect
+};
+
 
 export const generateRecommendation = async (props: Props) => {
   const ui = createStreamableUI(<Loading />);
-  const { system, images } = props;
+  const { images, occasion } = props;
+
+  if (!images || images.length === 0) {
+    ui.done(<Markdown content={"Error: No user image provided."} />);
+    return ui.value;
+  }
+
+  const userSelfieDataUrl = images[0];
+
+  const selectedProductIndex = Math.floor(Math.random() * LIPSTICK_PRODUCTS.length);
+  const selectedProduct: Product = LIPSTICK_PRODUCTS[selectedProductIndex];
+
+  // DEBUG: Log the selected product
+  console.log("==== DEBUG Selected Product:", selectedProduct);
+  // DEBUG: Log the occasion
+  console.log("==== DEBUG Occasion:", occasion);
+
+  let swatchImageBase64 = "";
+  let swatchMimeType = "image/jpeg"; // Default, can be refined
+  try {
+    const imagePath = path.join(process.cwd(), "public", selectedProduct.swatchImage);
+    const imageBuffer = fs.readFileSync(imagePath);
+    swatchImageBase64 = imageBuffer.toString("base64");
+    // Determine swatch MIME type from file extension
+    const extension = path.extname(selectedProduct.swatchImage).toLowerCase();
+    if (extension === '.png') swatchMimeType = 'image/png';
+    else if (extension === '.webp') swatchMimeType = 'image/webp';
+    // else keep jpeg or add more types
+
+  } catch (error) {
+    console.error("Error reading swatch image:", error);
+    ui.done(<Markdown content={"Error processing product image."} />);
+    return ui.value;
+  }
+
+  let updatedSystemPrompt = RecommendationSystemPrompt;
+  updatedSystemPrompt = updatedSystemPrompt.replace(/{brand}/g, selectedProduct.brand);
+  updatedSystemPrompt = updatedSystemPrompt.replace(/{collectionName}/g, selectedProduct.collectionName);
+  updatedSystemPrompt = updatedSystemPrompt.replace(/{occasion}/g, occasion);
+
 
   const triggerAI = async () => {
     try {
       const client = AzureOpenAI();
 
-      const messages: Array<ChatCompletionMessageParam> = images.map(
-        (image) => {
+      const processedUserSelfie = processDataUrl(userSelfieDataUrl);
+
+      const imagesForAI = [
+        { type: 'selfie', base64: processedUserSelfie.base64, mimeType: processedUserSelfie.mimeType },
+        { type: 'swatch', base64: swatchImageBase64, mimeType: swatchMimeType }
+      ];
+
+      const messages: Array<ChatCompletionMessageParam> = imagesForAI.map(
+        (imgDetail) => {
           return {
             role: "user",
             content: [
               {
+                type: "text",
+                text: imgDetail.type === 'selfie' ? "This is a selfie of the user." : `This is a swatch image of lipstick shades for the ${selectedProduct.brand} lipstick \"${selectedProduct.collectionName}\".`
+              },
+              {
                 type: "image_url",
                 image_url: {
-                  url: `data:image/jpeg;base64 ${image}`,
+                  url: `data:${imgDetail.mimeType};base64,${imgDetail.base64}`,
                 },
               },
             ],
@@ -35,20 +101,27 @@ export const generateRecommendation = async (props: Props) => {
         }
       );
 
-      // DEBUG log the messages to console, but don't print the base64 data
-      console.log("==== DEBUG System message:", system);
-      messages.forEach((message) => {
-        const content = message.content?.[0];
+      // DEBUG Log the image details
+      console.log("==== DEBUG Image details:");
+      imagesForAI.forEach((imgDetail, index) => {
+        console.log(`Image ${index} (Type):`, imgDetail.type);
+        console.log(`Image ${index} (Base64 prefix):`, imgDetail.base64.substring(0, 50) + "...");
+        console.log(`Image ${index} (MIME Type):`, imgDetail.mimeType);
+      });
+
+      console.log("==== DEBUG System message:", updatedSystemPrompt);
+      messages.forEach((message, index) => {
+        const textContent = message.content?.[0];
+        const imageContent = message.content?.[1];
         if (
           message.role === "user" &&
-          typeof content === "object" &&
-          content !== null &&
-          "type" in content &&
-          content.type === "image_url"
+          typeof textContent === 'object' && textContent?.type === 'text' &&
+          typeof imageContent === "object" && imageContent?.type === "image_url"
         ) {
-          console.log("User message: [image_data]");
+          console.log(`User message ${index} (Text):`, textContent.text);
+          console.log(`User message ${index} (Image URL prefix):`, imageContent.image_url.url.substring(0, 50) + "...");
         } else {
-          console.log("User message:", message);
+          console.log("User message (raw):", message);
         }
       });
 
@@ -58,7 +131,7 @@ export const generateRecommendation = async (props: Props) => {
         messages: [
           {
             role: "system",
-            content: system,
+            content: updatedSystemPrompt,
           },
           ...messages,
         ],
@@ -79,8 +152,13 @@ export const generateRecommendation = async (props: Props) => {
 
       ui.done(<Markdown content={fullText} />);
     } catch (error) {
-      console.error("Error", error);
-      ui.done(<Markdown content={"Error"} />);
+      console.error("Error in triggerAI:", error);
+      // Check if the error is an APIError and has a message
+      let errorMessage = "Error generating recommendation.";
+      if (error instanceof Error && 'message' in error) {
+        errorMessage = (error as any).message; // Or more specific error parsing
+      }
+      ui.done(<Markdown content={errorMessage} />);
     }
   };
 

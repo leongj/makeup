@@ -32,12 +32,12 @@ export const ImageDescription: React.FC<ImageDescriptionProps> = ({
         <div className="mb-4">
           <img
             src={imageSrc}
-            alt="Captured forearm"
+            alt="Captured selfie"
             className="rounded-lg shadow-md max-w-xs mx-auto"
           />
         </div>
       )}
-      {dressType && (
+      {/* {dressType && (
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-slate-700 mb-2">
             Occasion:
@@ -46,15 +46,17 @@ export const ImageDescription: React.FC<ImageDescriptionProps> = ({
             {dressTypeLabels[dressType] || dressType}
           </p>
         </div>
-      )}
+      )} */}
+
+      {/* Display chosen product here */}
 
       {/* AI Recommendation: */}
       {imageDescription.description ? (
-        <div className="container mx-auto max-w-2xl flex flex-col bg-slate-50 p-4 rounded-lg shadow">
+        <div className="container mx-auto max-w-xl flex flex-col p-4 rounded-lg">
           {imageDescription.description}
         </div>
       ) : (
-        <p className="text-slate-500">
+        <p className="text-slate-900">
           {imageSrc && dressType
             ? "Generating recommendation..."
             : "Please complete previous steps."}
