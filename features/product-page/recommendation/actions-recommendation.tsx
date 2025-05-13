@@ -2,7 +2,7 @@
 
 import { createStreamableUI } from "ai/rsc";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
-import { AzureOpenAI } from "../../common/azure-openai/azure"; // Corrected path
+import { AzureOpenAI } from "../../common/azure-openai/azure";
 import { Loading } from "../../common/loading";
 import { Markdown } from "../../common/markdown";
 import { LIPSTICK_PRODUCTS, Product } from "../products";

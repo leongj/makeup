@@ -51,7 +51,7 @@ export const LandingPage = () => {
   }
 
   return (
-    <div className="items-center justify-center flex gap-0">
+    <div className="items-center justify-center py-10 flex gap-0">
       <motion.img
         initial={{ opacity: 0, y: -10, scale: 0.8, rotate: 0 }}
         animate={{ opacity: 1, y: 0, scale: [1.7, 1], rotate: 20 }} // Changed rotate to 45
