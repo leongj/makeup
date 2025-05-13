@@ -3,12 +3,12 @@
 import { useAltImages, useImageDescription } from "../store";
 import { dressTypeLabels } from "../dress-types";
 
-interface ImageDescriptionProps {
+interface RecommendationProps {
   imageSrc: string | null;
   dressType: string | null;
 }
 
-export const ImageDescription: React.FC<ImageDescriptionProps> = ({
+export const Recommendation: React.FC<RecommendationProps> = ({
   imageSrc,
   dressType,
 }) => {

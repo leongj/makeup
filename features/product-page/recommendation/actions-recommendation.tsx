@@ -105,8 +105,8 @@ export const generateRecommendation = async (props: Props) => {
       console.log("==== DEBUG Image details:");
       imagesForAI.forEach((imgDetail, index) => {
         console.log(`Image ${index} (Type):`, imgDetail.type);
-        console.log(`Image ${index} (Base64 prefix):`, imgDetail.base64.substring(0, 50) + "...");
         console.log(`Image ${index} (MIME Type):`, imgDetail.mimeType);
+        console.log(`Image ${index} (Base64):`, imgDetail.base64.substring(0, 50) + "...");
       });
 
       console.log("==== DEBUG System message:", updatedSystemPrompt);
