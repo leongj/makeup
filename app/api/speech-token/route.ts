@@ -28,8 +28,14 @@ export async function GET() {
 
     const token = await tokenResponse.text();
     return NextResponse.json({ token: token, region: speechRegion });
-  } catch (err: any) {
-    console.error("Exception fetching speech token:", err);
-    return NextResponse.json({ error: `There was an error authorizing your speech key: ${err.message}` }, { status: 401 });
+  } catch (err: unknown) {
+    let errorMessage = "An unexpected error occurred";
+    if (err instanceof Error) {
+      errorMessage = err.message;
+    } else if (typeof err === 'string') {
+      errorMessage = err;
+    }
+    console.error(errorMessage);
+    return NextResponse.json({ error: `There was an error authorizing your speech key: ${errorMessage}` }, { status: 401 });
   }
 }

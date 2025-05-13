@@ -1,4 +1,3 @@
-
 import * as SpeechSDK from "microsoft-cognitiveservices-speech-sdk";
 
 const SPEECH_TOKEN_EXPIRY_MS = 9 * 60 * 1000; // 9 minutes
@@ -29,13 +28,17 @@ async function getToken(): Promise<{ token: string; region: string } | null> {
 async function getSpeechConfig(): Promise<SpeechSDK.SpeechConfig | undefined> {
   const now = Date.now();
   if (!speechConfig || (now - lastTokenFetchTime > SPEECH_TOKEN_EXPIRY_MS)) {
+    console.log("Speech token expired or not set, attempting to refresh...");
     const tokenData = await getToken();
     if (tokenData) {
       speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(tokenData.token, tokenData.region);
-      // The language of the voice that speaks.
-      speechConfig.speechSynthesisVoiceName = "en-US-AvaMultilingualNeural";
+      speechConfig.speechSynthesisVoiceName = "en-AU-KimNeural";
+      // speechConfig.speechSynthesisVoiceName = "fr-FR-VivienneMultilingualNeural";
+      // speechConfig.speechSynthesisVoiceName = "it-IT-IsabellaMultilingualNeural";
       lastTokenFetchTime = now;
+      console.log("Speech token refreshed successfully.");
     } else {
+      console.error("Failed to refresh speech token.");
       // Invalidate existing config if token fetch fails
       speechConfig = undefined;
     }
@@ -44,6 +47,7 @@ async function getSpeechConfig(): Promise<SpeechSDK.SpeechConfig | undefined> {
 }
 
 export async function speakText(textToSpeak: string): Promise<void> {
+  console.log(`speakText called with: "${textToSpeak}"`);
   const config = await getSpeechConfig();
   if (!config) {
     console.error("Speech SDK config not available. Cannot speak text.");
@@ -52,22 +56,24 @@ export async function speakText(textToSpeak: string): Promise<void> {
 
   // Recreate synthesizer if it doesn't exist or if config might have changed (though less likely with token refresh)
   if (!synthesizer) {
+    console.log("Creating new SpeechSynthesizer instance.");
     synthesizer = new SpeechSDK.SpeechSynthesizer(config);
   } else {
     // If the config object itself was replaced, we need a new synthesizer
     // This simple check might not be enough if the internal state of config can change without the object reference changing.
     // However, fromAuthorizationToken likely returns a new object or updates in a way that requires re-init.
-    if (synthesizer.speechConfig !== config) {
+    // if (synthesizer.speechConfig !== config) {
+        console.log("Reinitializing synthesizer with new config.");
         synthesizer.close();
         synthesizer = new SpeechSDK.SpeechSynthesizer(config);
-    }
+    // }
   }
 
   synthesizer.speakTextAsync(
     textToSpeak,
     result => {
       if (result.reason === SpeechSDK.ResultReason.SynthesizingAudioCompleted) {
-        console.log("Synthesis finished.");
+        console.log("Speech synthesis completed successfully.");
       } else {
         console.error("Speech synthesis canceled, " + result.errorDetails);
       }

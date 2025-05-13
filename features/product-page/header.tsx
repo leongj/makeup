@@ -2,13 +2,13 @@
 import { ArrowRight } from "lucide-react";
 import * as motion from "motion/react-client";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Added import
+import { useRouter } from "next/navigation";
 import { useAltImages } from "./store";
-import { speakText, cleanupSpeechServices } from "../common/speech"; // Added import
-import { useEffect } from "react"; // Added import
+import { speakText, cleanupSpeechServices } from "../common/speech";
+import { useEffect } from "react";
 
 const TagLine = "Demo powered by Microsoft AI";
-const SpokenText = "Welcome to the Lipstick demo! Click around to find your perfect shade."; // Added constant for spoken text
+const SpokenText = "Welcome to the Lipstick demo! Let's find your perfect shade. Tap anywhere to start.";
 
 export const Header = () => {
   const images = useAltImages();
@@ -53,14 +53,12 @@ export const LandingPage = () => {
     return null;
   }
 
-  const handleSpeakText = () => {
-    speakText(SpokenText); // Use the new common function
-  };
-
   useEffect(() => {
-    // Optional: Cleanup when the component unmounts
+    // speak the welcome text
+    speakText(SpokenText); // Use the new common function
+
     return () => {
-      // cleanupSpeechServices(); // Call this if you want to explicitly release resources
+      cleanupSpeechServices(); // Cleanup speech services on unmount
     };
   }, []);
 
@@ -94,15 +92,6 @@ export const LandingPage = () => {
             Microsoft AI
           </span>
         </motion.h1>
-        <motion.button
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          onClick={handleSpeakText}
-          className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-        >
-          Hear a Welcome Message
-        </motion.button>
       </div>
     </div>
   );
