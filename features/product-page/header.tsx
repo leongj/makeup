@@ -4,8 +4,11 @@ import * as motion from "motion/react-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // Added import
 import { useAltImages } from "./store";
+import { speakText, cleanupSpeechServices } from "../common/speech"; // Added import
+import { useEffect } from "react"; // Added import
 
 const TagLine = "Demo powered by Microsoft AI";
+const SpokenText = "Welcome to the Lipstick demo! Click around to find your perfect shade."; // Added constant for spoken text
 
 export const Header = () => {
   const images = useAltImages();
@@ -50,6 +53,18 @@ export const LandingPage = () => {
     return null;
   }
 
+  const handleSpeakText = () => {
+    speakText(SpokenText); // Use the new common function
+  };
+
+  useEffect(() => {
+    // Optional: Cleanup when the component unmounts
+    return () => {
+      // cleanupSpeechServices(); // Call this if you want to explicitly release resources
+    };
+  }, []);
+
+
   return (
     <div className="items-center justify-center py-10 flex gap-0">
       <motion.img
@@ -79,6 +94,15 @@ export const LandingPage = () => {
             Microsoft AI
           </span>
         </motion.h1>
+        <motion.button
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          onClick={handleSpeakText}
+          className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+        >
+          Hear a Welcome Message
+        </motion.button>
       </div>
     </div>
   );
