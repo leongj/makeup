@@ -5,12 +5,21 @@ import { useRouter } from "next/navigation"; // Added import
 // Ensure the app state is reset when navigating to the home page
 import { useEffect } from "react";
 import { resetAppStore } from "@/features/product-page/store";
+import { welcomeAudio } from "@/features/common/audio-player";
 
 export const HomePage = () => {
   const router = useRouter(); // Added router
 
   useEffect(() => {
     resetAppStore();
+
+    // Play welcome audio when component mounts
+    welcomeAudio.play();
+    
+    // Clean up audio when component unmounts
+    return () => {
+      welcomeAudio.stop();
+    };
   }, []);
 
   const handleNavigation = () => {

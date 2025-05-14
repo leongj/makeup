@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { AltImages } from "./alt-text/alt-images";
 import { HomeAppBar } from "./app-bar/app-bar";
 import { ProductCamera } from "./product-camera";
@@ -9,6 +9,7 @@ import { UploadImageLanding } from "./upload-image-landing";
 import { DressTypeSelection } from "./dress-type-selection";
 import { generateRecommendationForOccasion, useImageDescription, resetAppStore } from "./store";
 import { resetCamera } from "../real-time-page/camera/camera-store";
+import { selfieAudio, occasionAudio } from "@/features/common/audio-player";
 
 // Simple fade-in animation wrapper
 const FadeIn: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -40,6 +41,26 @@ export const ProductPage = () => {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [selectedDressType, setSelectedDressType] = useState<string | null>(null);
   // const { isLoading: isRecommendationLoading } = useImageDescription(); // Get loading state
+
+  // Play the appropriate audio when workflow step changes
+  useEffect(() => {
+    // Stop any currently playing audio
+    selfieAudio.stop();
+    occasionAudio.stop();
+    
+    // Play the appropriate audio for the current step
+    if (workflowStep === "photo") {
+      selfieAudio.play();
+    } else if (workflowStep === "dressType") {
+      occasionAudio.play();
+    }
+    
+    // Cleanup on unmount or step change
+    return () => {
+      selfieAudio.stop();
+      occasionAudio.stop();
+    };
+  }, [workflowStep]);
 
   const handlePhotoTaken = (imageSrc: string) => {
     setCapturedImage(imageSrc);

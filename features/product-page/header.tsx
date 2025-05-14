@@ -4,7 +4,6 @@ import * as motion from "motion/react-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAltImages } from "./store";
-import { speakText, cleanupSpeechServices } from "../common/speech";
 import { useEffect } from "react";
 
 const TagLine = "Demo powered by Microsoft AI";
@@ -48,20 +47,6 @@ export const Header = () => {
 
 export const LandingPage = () => {
   const images = useAltImages();
-
-  if (images.length !== 0) {
-    return null;
-  }
-
-  useEffect(() => {
-    // speak the welcome text
-    speakText(SpokenText); // Use the new common function
-
-    return () => {
-      cleanupSpeechServices(); // Cleanup speech services on unmount
-    };
-  }, []);
-
 
   return (
     <div className="items-center justify-center py-10 flex gap-0">

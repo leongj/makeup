@@ -32,7 +32,7 @@ async function getSpeechConfig(): Promise<SpeechSDK.SpeechConfig | undefined> {
     const tokenData = await getToken();
     if (tokenData) {
       speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(tokenData.token, tokenData.region);
-      speechConfig.speechSynthesisVoiceName = "en-AU-KimNeural";
+      speechConfig.speechSynthesisVoiceName = "en-AU-TinaNeural";
       // speechConfig.speechSynthesisVoiceName = "fr-FR-VivienneMultilingualNeural";
       // speechConfig.speechSynthesisVoiceName = "it-IT-IsabellaMultilingualNeural";
       lastTokenFetchTime = now;
