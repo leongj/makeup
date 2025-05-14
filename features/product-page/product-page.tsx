@@ -2,7 +2,7 @@
 
 import { useState, useLayoutEffect, useEffect } from "react";
 import { AltImages } from "./alt-text/alt-images";
-import { HomeAppBar } from "./app-bar/app-bar";
+import { HomeAppBar } from "../app-bar/app-bar";
 import { ProductCamera } from "./product-camera";
 import { Recommendation } from "./recommendation/recommendation";
 import { UploadImageLanding } from "./upload-image-landing";

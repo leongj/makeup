@@ -1,6 +1,6 @@
-import { AppBarButton } from "../../ui/app-bar/app-bar";
-import { ImageIcon } from "../../ui/app-icons";
-import { setUploadRef, updateFiles, useAppStore } from "../store";
+import { AppBarButton } from "../ui/app-bar/app-bar";
+import { ImageIcon } from "../ui/app-icons";
+import { setUploadRef, updateFiles, useAppStore } from "../product-page/store";
 
 export const UploadImage = () => {
   const uploadRef = useAppStore((state) => state.uploadRef);

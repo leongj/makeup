@@ -26,7 +26,7 @@ export const useSectionIsOpen = () => {
   return state;
 };
 
-export const useAppBardSection = () => {
+export const useAppBarSection = () => {
   const state = useAppBarStore((state) => state.section);
   return state;
 };
