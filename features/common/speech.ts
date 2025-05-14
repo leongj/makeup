@@ -33,8 +33,6 @@ async function getSpeechConfig(): Promise<SpeechSDK.SpeechConfig | undefined> {
     if (tokenData) {
       speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(tokenData.token, tokenData.region);
       speechConfig.speechSynthesisVoiceName = "en-AU-TinaNeural";
-      // speechConfig.speechSynthesisVoiceName = "fr-FR-VivienneMultilingualNeural";
-      // speechConfig.speechSynthesisVoiceName = "it-IT-IsabellaMultilingualNeural";
       lastTokenFetchTime = now;
       console.log("Speech token refreshed successfully.");
     } else {
