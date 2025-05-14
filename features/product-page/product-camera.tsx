@@ -108,8 +108,8 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
               className="rounded-3xl"
               videoConstraints={{
                 // facingMode: facingMode,
-                // facingMode: { exact: "user" },
-                facingMode: "environment",
+                facingMode: { exact: "user" },
+                // facingMode: "environment",
                 // aspectRatio: 11 / 16,
                 height: 600,
               }}
