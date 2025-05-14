@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import React, { useState } from "react";
 import Webcam from "react-webcam";
 import { capture, clearScreenshot, useCameraStore } from "../real-time-page/camera/camera-store";
+import { cameraClickAudio } from "../common/audio-player";
 
 export const Screenshot = () => {
   const screenshot = useCameraStore((s) => s.screenshot);
@@ -51,6 +52,8 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
 
   const handleCapture = async () => {
     setFlash(true);
+    // Play camera click sound
+    cameraClickAudio.play();
     // Step 1: Flash white, then fade out
     setTimeout(() => {
       const img = capture();
@@ -105,8 +108,8 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
               className="rounded-3xl"
               videoConstraints={{
                 // facingMode: facingMode,
-                facingMode: { exact: "user" },
-                // facingMode: "environment",
+                // facingMode: { exact: "user" },
+                facingMode: "environment",
                 // aspectRatio: 11 / 16,
                 height: 600,
               }}
