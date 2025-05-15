@@ -1,5 +1,7 @@
 "use client";
 
+
+import * as motion from "motion/react-client";
 import { useState, useLayoutEffect, useEffect } from "react";
 import { AltImages } from "./alt-text/alt-images";
 import { HomeAppBar } from "../app-bar/app-bar";
@@ -78,14 +80,29 @@ export const ProductPage = () => {
   return (
     <div className=" h-svh max-h-svh text-slate-500">
       <HomeAppBar />
-      <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col pt-36 min-h-full gap-6">
+      <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col pt-24 min-h-full gap-6">
         {workflowStep === "photo" && (
           <FadeIn>
             <>
-              <h1 className="text-2xl font-semibold text-center text-slate-700">
-                Start by taking a selfie<br />
-                (click anywhere to take a photo)
-              </h1>
+              <div className="flex flex-col items-center justify-center text-center">
+                <motion.p
+                  initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
+                  animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+                  transition={{ delay: 1 }}
+                  className="text-2xl font-semibold text-red-600 mt-6 mb-4"
+                >
+                  Take a selfie so I can see you!
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
+                  animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+                  transition={{ delay: 1.2 }}
+                  className="text-lg text-red-800"
+                >
+                  (Tap the screen to take a picture)
+                </motion.p>
+              </div>
+
               <div className="flex flex-col pt-10 justify-center items-center w-full">
                 {/* Pass handlePhotoTaken to ProductCamera */}
                 <ProductCamera onPhotoCaptured={handlePhotoTaken} />
