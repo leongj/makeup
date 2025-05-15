@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Focal",
-    short_name: "Focal",
+    name: "Lipstick",
+    short_name: "Lipstick",
     description:
       "Generate alt text and descriptions for images using Azure OpenAI",
     start_url: "/",
