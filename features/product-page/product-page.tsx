@@ -7,7 +7,7 @@ import { ProductCamera } from "./product-camera";
 import { Recommendation } from "./recommendation/recommendation";
 import { UploadImageLanding } from "./upload-image-landing";
 import { DressTypeSelection } from "./dress-type-selection";
-import { generateRecommendationForOccasion, useImageDescription, resetAppStore } from "./store";
+import { generateRecommendationForOccasion, useRecommendation, resetAppStore } from "./store";
 import { resetCamera } from "../real-time-page/camera/camera-store";
 import { selfieAudio, occasionAudio } from "@/features/common/audio-player";
 

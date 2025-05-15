@@ -3,11 +3,11 @@ import { Eraser, Save, Undo2, X } from "lucide-react";
 import { motion } from "motion/react";
 import { ButtonHTMLAttributes, useState } from "react";
 import { DescriptionSystemPrompt } from "../product-page/recommendation/prompt";
-import { updateSystemPrompt, useImageDescription } from "../product-page/store";
+import { updateSystemPrompt, useRecommendation } from "../product-page/store";
 import { closeAppBarSection } from "./app-bar-store";
 
 export const SettingsSection = () => {
-  const system = useImageDescription().system;
+  const system = useRecommendation().system;
   const [localSystem, setLocalSystem] = useState(system);
   return (
     <motion.div

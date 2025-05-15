@@ -3,8 +3,8 @@ import { create } from "zustand";
 
 import { generateImageAltText } from "./alt-text/actions-alt-text";
 import { generateRecommendation } from "./recommendation/actions-recommendation";
-import { DescriptionSystemPrompt, RecommendationSystemPrompt } from "./recommendation/prompt"; // Import the new prompt
-import { Loading } from "../common/loading"; // Import Loading component
+import { RecommendationSystemPrompt } from "./recommendation/prompt";
+import { Loading } from "../common/loading";
 
 export type ImageItemState = {
   base64: string;
@@ -15,7 +15,7 @@ export type ImageItemState = {
 };
 
 export type ImageDescriptionState = {
-  description: ReactNode;
+  text: ReactNode;
   system: string;
   isLoading: boolean; // Added isLoading
 };
@@ -24,16 +24,16 @@ type AppState = {
   uploadRef: HTMLInputElement | null;
   files: FileList | null;
   altImages: ImageItemState[];
-  imageDescription: ImageDescriptionState;
+  recommendation: ImageDescriptionState;
 };
 
 const initialState: AppState = {
   files: null,
   uploadRef: null,
   altImages: [],
-  imageDescription: {
-    description: "",
-    system: DescriptionSystemPrompt,
+  recommendation: {
+    text: "",
+    system: RecommendationSystemPrompt,
     isLoading: false, // Initialized isLoading
   },
 };
@@ -44,8 +44,8 @@ export const useAltImages = () => {
   return useAppStore((state) => state.altImages);
 };
 
-export const useImageDescription = () => {
-  return useAppStore((state) => state.imageDescription);
+export const useRecommendation = () => {
+  return useAppStore((state) => state.recommendation);
 };
 
 export const setUploadRef = (ref: HTMLInputElement) => {
@@ -56,9 +56,9 @@ export const updateFiles = async (files: FileList) => {
   useAppStore.setState((state) => ({
     ...initialState,
     files,
-    imageDescription: {
-      ...state.imageDescription,
-      description: "",
+    recommendation: {
+      ...state.recommendation,
+      text: "",
     },
   }));
 
@@ -74,7 +74,7 @@ export const updateFiles = async (files: FileList) => {
 export const updateSystemPrompt = (system: string) => {
   useAppStore.setState((state) => ({
     ...state,
-    imageDescription: { ...state.imageDescription, system },
+    recommendation: { ...state.recommendation, system },
   }));
 };
 
@@ -90,9 +90,9 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
     ...initialState,
     files: null,
     altImages: [],
-    imageDescription: {
-      ...state.imageDescription,
-      description: "", // Clear previous description
+    recommendation: {
+      ...state.recommendation,
+      text: "", // Clear previous description
       isLoading: true,
     },
   }));
@@ -133,9 +133,9 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
 
     useAppStore.setState((state) => ({
       ...state,
-      imageDescription: {
-        ...state.imageDescription,
-        description: result, // This is the streamable UI
+      recommendation: {
+        ...state.recommendation,
+        text: result, // This is the streamable UI
         isLoading: false, // Set to false as the stream itself will complete
       },
     }));
@@ -143,9 +143,9 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
     console.error("Error generating recommendation:", error);
     useAppStore.setState((state) => ({
       ...state,
-      imageDescription: {
-        ...state.imageDescription,
-        description: "Failed to generate recommendation.", // Show error message
+      recommendation: {
+        ...state.recommendation,
+        text: "Failed to generate recommendation.", // Show error message
         isLoading: false,
       },
     }));
@@ -158,7 +158,7 @@ export const processCapture = async (capturedImageBase64: string) => {
     ...initialState,
     files: null,
     altImages: [],
-    imageDescription: { ...state.imageDescription, description: "" },
+    recommendation: { ...state.recommendation, text: "" },
   }));
   // Create new image entry for the captured image
   const capturedImageItem: ImageItemState = {
@@ -213,7 +213,7 @@ const startGeneratingRecommendation = async () => {
   }
   useAppStore.setState((s) => ({ // Renamed state to s to avoid conflict
     ...s,
-    imageDescription: { ...s.imageDescription, isLoading: true, description: "" },
+    recommendation: { ...s.recommendation, isLoading: true, text: "" },
   }));
 
   const images = state.altImages.map((image) => image.base64);
@@ -227,9 +227,9 @@ const startGeneratingRecommendation = async () => {
 
     useAppStore.setState((s) => ({ // Renamed state to s
       ...s,
-      imageDescription: {
-        ...s.imageDescription,
-        description: result,
+      recommendation: {
+        ...s.recommendation,
+        text: result,
         isLoading: false,
       },
     }));
@@ -237,9 +237,9 @@ const startGeneratingRecommendation = async () => {
     console.error(error);
     useAppStore.setState((s) => ({ // Renamed state to s
       ...s,
-      imageDescription: {
-        ...s.imageDescription,
-        description: "Failed to generate description.",
+      recommendation: {
+        ...s.recommendation,
+        text: "Failed to generate description.",
         isLoading: false,
       },
     }));
