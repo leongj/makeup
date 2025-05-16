@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useAltImages, useRecommendation } from "../store";
-import { dressTypeLabels } from "../dress-types";
+import { dressTypeLabels } from "../occasion-examples";
 import { speakText } from "../../common/speech";
 import { ConversationTranslationEventArgs } from "microsoft-cognitiveservices-speech-sdk";
 

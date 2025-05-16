@@ -8,15 +8,15 @@ import { HomeAppBar } from "../app-bar/app-bar";
 import { ProductCamera } from "./product-camera";
 import { Recommendation } from "./recommendation/recommendation";
 import { UploadImageLanding } from "./upload-image-landing";
-import { DressTypeSelection } from "./dress-type-selection";
+import { OccasionSelection } from "./occasion-selection";
 import { generateRecommendationForOccasion, useRecommendation, resetAppStore } from "./store";
 import { resetCamera } from "../real-time-page/camera/camera-store";
 import { selfieAudio, occasionAudio } from "@/features/common/audio-player";
 
 // Simple fade-in animation wrapper
-const FadeIn: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+const FadeIn: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
   <div
-    className="opacity-0 animate-fade-in"
+    className={`opacity-0 animate-fade-in ${className ?? ""}`}
     style={{
       animation: "fadeIn 0.5s forwards",
     }}
@@ -39,9 +39,9 @@ export const ProductPage = () => {
     resetAppStore();
     resetCamera();
   }, []);
-  const [workflowStep, setWorkflowStep] = useState<"photo" | "dressType" | "recommendation">("photo");
+  const [workflowStep, setWorkflowStep] = useState<"photo" | "occasionSelection" | "recommendation">("photo");
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
-  const [selectedDressType, setSelectedDressType] = useState<string | null>(null);
+  const [selectedoccasionSelection, setSelectedoccasionSelection] = useState<string | null>(null);
   // const { isLoading: isRecommendationLoading } = useImageDescription(); // Get loading state
 
   // Play the appropriate audio when workflow step changes
@@ -53,7 +53,7 @@ export const ProductPage = () => {
     // Play the appropriate audio for the current step
     if (workflowStep === "photo") {
       selfieAudio.play();
-    } else if (workflowStep === "dressType") {
+    } else if (workflowStep === "occasionSelection") {
       occasionAudio.play();
     }
     
@@ -66,21 +66,21 @@ export const ProductPage = () => {
 
   const handlePhotoTaken = (imageSrc: string) => {
     setCapturedImage(imageSrc);
-    setWorkflowStep("dressType");
+    setWorkflowStep("occasionSelection");
   };
 
-  const handleDressTypeSelected = async (dressType: string) => {
-    setSelectedDressType(dressType);
+  const handleOccasionSelected = async (occasionSelection: string) => {
+    setSelectedoccasionSelection(occasionSelection);
     setWorkflowStep("recommendation");
     if (capturedImage) {
-      await generateRecommendationForOccasion(capturedImage, dressType);
+      await generateRecommendationForOccasion(capturedImage, occasionSelection);
     }
   };
 
   return (
-    <div className=" h-svh max-h-svh text-slate-500">
+    <div className="flex flex-col h-svh max-h-svh text-slate-500">
       <HomeAppBar />
-      <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col pt-24 min-h-full gap-6">
+      <div className="container max-w-4xl mx-auto xl:px-0 px-3 flex flex-col pt-24 min-h-0 flex-1 gap-6">
         {workflowStep === "photo" && (
           <FadeIn>
             <>
@@ -115,24 +115,39 @@ export const ProductPage = () => {
           </FadeIn>
         )}
 
-        {workflowStep === "dressType" && capturedImage && (
-          <FadeIn>
+        {workflowStep === "occasionSelection" && capturedImage && (
+          <FadeIn className="flex-1 flex flex-col">
             <>
-              <h1 className="text-2xl font-semibold text-center text-slate-700">
-                Great! Now, what's the occasion?
-              </h1>
+              <div className="flex flex-col items-center justify-center text-center">
+                <motion.p
+                  initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
+                  animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+                  transition={{ delay: 1 }}
+                  className="text-2xl font-semibold text-red-600 mt-6 mb-4"
+                >
+                  Great! Now tell me about the occasion
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
+                  animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+                  transition={{ delay: 1.2 }}
+                  className="text-lg text-red-800"
+                >
+                  (Tap and hold to talk, or choose an example)
+                </motion.p>
+              </div>
               {/* Optionally display the captured image */}
               {/* <img src={capturedImage} alt="Captured forearm" className="mx-auto my-4 max-w-xs rounded-lg shadow-md" /> */}
-              <DressTypeSelection onSelectDressType={handleDressTypeSelected} />
+              <OccasionSelection onSelectOccasion={handleOccasionSelected} />
             </>
           </FadeIn>
         )}
 
-        {workflowStep === "recommendation" && capturedImage && selectedDressType && (
+        {workflowStep === "recommendation" && capturedImage && selectedoccasionSelection && (
           <FadeIn>
             <>
-              {/* Pass capturedImage and selectedDressType to ImageDescription */}
-              <Recommendation imageSrc={capturedImage} dressType={selectedDressType} />
+              {/* Pass capturedImage and selectedoccasionSelection to ImageDescription */}
+              <Recommendation imageSrc={capturedImage} occasionSelection={selectedoccasionSelection} />
             </>
           </FadeIn>
         )}
