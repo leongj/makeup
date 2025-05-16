@@ -2,18 +2,16 @@
 
 import { useEffect } from "react";
 import { useAltImages, useRecommendation } from "../store";
-import { dressTypeLabels } from "../occasion-examples";
 import { speakText } from "../../common/speech";
-import { ConversationTranslationEventArgs } from "microsoft-cognitiveservices-speech-sdk";
 
 interface RecommendationProps {
   imageSrc: string | null;
-  dressType: string | null;
+  occasion: string | null;
 }
 
 export const Recommendation: React.FC<RecommendationProps> = ({
   imageSrc,
-  dressType,
+  occasion,
 }) => {
   const images = useAltImages(); // This might be for alternative images, not the main one
   const recommendation = useRecommendation(); // This is likely where the AI description will live
@@ -57,29 +55,6 @@ export const Recommendation: React.FC<RecommendationProps> = ({
 
   return (
     <div className="flex flex-col gap-4 py-4 items-center">
-      {/* {imageSrc && (
-        <div className="mb-4">
-          <img
-            src={imageSrc}
-            alt="Captured selfie"
-            className="rounded-lg shadow-md max-w-xs mx-auto"
-          />
-        </div>
-      )} */}
-      {/* {dressType && (
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold text-slate-700 mb-2">
-            Occasion:
-          </h2>
-          <p className="text-lg text-slate-600 text-center">
-            {dressTypeLabels[dressType] || dressType}
-          </p>
-        </div>
-      )} */}
-
-      {/* Display chosen product here */}
-
-      {/* AI Recommendation: */}
       <h2 className="text-2xl font-semibold text-red-700">
         AI Recommendation:
       </h2>
@@ -92,7 +67,7 @@ export const Recommendation: React.FC<RecommendationProps> = ({
         </div>
       ) : (
         <p className="text-slate-900">
-          {imageSrc && dressType
+          {imageSrc && occasion
             ? "Generating recommendation..."
             : "Please complete previous steps."}
         </p>

@@ -104,12 +104,7 @@ export const ProductPage = () => {
               </div>
 
               <div className="flex flex-col pt-10 justify-center items-center w-full">
-                {/* Pass handlePhotoTaken to ProductCamera */}
                 <ProductCamera onPhotoCaptured={handlePhotoTaken} />
-                {/* <div className="mt-4"> */}
-                  {/* Pass handlePhotoTaken to UploadImageLanding if it also handles image capture */}
-                  {/* <UploadImageLanding onImageUploaded={handlePhotoTaken} /> */}
-                {/* </div> */}
               </div>
             </>
           </FadeIn>
@@ -146,8 +141,7 @@ export const ProductPage = () => {
         {workflowStep === "recommendation" && capturedImage && selectedoccasionSelection && (
           <FadeIn>
             <>
-              {/* Pass capturedImage and selectedoccasionSelection to ImageDescription */}
-              <Recommendation imageSrc={capturedImage} occasionSelection={selectedoccasionSelection} />
+              <Recommendation imageSrc={capturedImage} occasion={selectedoccasionSelection} />
             </>
           </FadeIn>
         )}
