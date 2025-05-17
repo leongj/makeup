@@ -25,6 +25,7 @@ type AppState = {
   files: FileList | null;
   altImages: ImageItemState[];
   recommendation: ImageDescriptionState;
+  speechInput: string;
 };
 
 const initialState: AppState = {
@@ -36,6 +37,7 @@ const initialState: AppState = {
     system: RecommendationSystemPrompt,
     isLoading: false, // Initialized isLoading
   },
+  speechInput: "",
 };
 
 export const useAppStore = create<AppState>(() => initialState);
@@ -46,6 +48,16 @@ export const useAltImages = () => {
 
 export const useRecommendation = () => {
   return useAppStore((state) => state.recommendation);
+};
+
+export const useSpeechInput = () => useAppStore((state) => state.speechInput);
+
+export const setSpeechInput = (input: string) => {
+  useAppStore.setState((state) => ({ ...state, speechInput: input }));
+};
+
+export const resetSpeechInput = () => {
+  useAppStore.setState((state) => ({ ...state, speechInput: "" }));
 };
 
 export const setUploadRef = (ref: HTMLInputElement) => {
@@ -211,9 +223,9 @@ const startGeneratingRecommendation = async () => {
     console.warn("startGeneratingRecommendation called with no images in altImages.");
     return;
   }
-  useAppStore.setState((s) => ({ // Renamed state to s to avoid conflict
-    ...s,
-    recommendation: { ...s.recommendation, isLoading: true, text: "" },
+  useAppStore.setState((state) => ({
+    ...state,
+    recommendation: { ...state.recommendation, isLoading: true, text: "" },
   }));
 
   const images = state.altImages.map((image) => image.base64);
@@ -225,20 +237,20 @@ const startGeneratingRecommendation = async () => {
       occasion: "general use", // Added a default occasion, this needs review
     });
 
-    useAppStore.setState((s) => ({ // Renamed state to s
-      ...s,
+    useAppStore.setState((state) => ({
+      ...state,
       recommendation: {
-        ...s.recommendation,
+        ...state.recommendation,
         text: result,
         isLoading: false,
       },
     }));
   } catch (error) {
     console.error(error);
-    useAppStore.setState((s) => ({ // Renamed state to s
-      ...s,
+    useAppStore.setState((state) => ({
+      ...state,
       recommendation: {
-        ...s.recommendation,
+        ...state.recommendation,
         text: "Failed to generate description.",
         isLoading: false,
       },

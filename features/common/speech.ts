@@ -25,7 +25,7 @@ async function getToken(): Promise<{ token: string; region: string } | null> {
   }
 }
 
-async function getSpeechConfig(): Promise<SpeechSDK.SpeechConfig | undefined> {
+export async function getSpeechConfig(): Promise<SpeechSDK.SpeechConfig | undefined> {
   const now = Date.now();
   if (!speechConfig || (now - lastTokenFetchTime > SPEECH_TOKEN_EXPIRY_MS)) {
     console.log("Speech token expired or not set, attempting to refresh...");

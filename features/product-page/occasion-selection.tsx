@@ -3,28 +3,40 @@
 import { exampleOccasions } from "./occasion-examples";
 import { VoiceIcon } from "../ui/app-icons";
 import React, { useState, useRef } from "react";
+import { startRecognition, stopRecognition } from "../common/speech-to-text";
+import { useSpeechInput, resetSpeechInput } from "./store";
 
 interface OccasionSelectionProps {
   onSelectOccasion: (dressType: string) => void;
 }
 
 export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
-  onSelectOccasion: onSelectOccasion,
+  onSelectOccasion,
 }) => {
-  // Add state for pulsate effect
   const [isPulsating, setIsPulsating] = useState(false);
   const holdTimeout = useRef<NodeJS.Timeout | null>(null);
+  const speechInput = useSpeechInput();
 
   // Handlers for tap and hold
   const handlePointerDown = () => {
-    holdTimeout.current = setTimeout(() => {
+    console.log("pointer down");
+    if (holdTimeout.current) clearTimeout(holdTimeout.current); // Prevent overlap
+    holdTimeout.current = setTimeout(async () => {
       setIsPulsating(true);
-    }, 300); // 300ms hold to trigger
+      // resetSpeechInput();
+      console.log("Starting speech recognition...");
+      await startRecognition();
+    }, 300); // hold for at least 300ms to trigger
   };
 
   const handlePointerUp = () => {
+    console.log("pointer up");
     if (holdTimeout.current) clearTimeout(holdTimeout.current);
     setIsPulsating(false);
+    stopRecognition();
+    if (speechInput && speechInput.length > 2) {
+      // onSelectOccasion(speechInput);
+    }
   };
 
   return (
@@ -43,24 +55,33 @@ export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
 
       <div
         className="flex-grow w-full flex flex-col justify-center items-center mt-4"
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onPointerLeave={handlePointerUp}
-        onPointerCancel={handlePointerUp}
+        // onPointerDown={handlePointerDown}
+        // onPointerUp={handlePointerUp}
+        // onPointerLeave={handlePointerUp}
+        // onPointerCancel={handlePointerUp}
         // For accessibility: also handle mouse/touch events
         onMouseDown={handlePointerDown}
         onMouseUp={handlePointerUp}
-        onMouseLeave={handlePointerUp}
-        onTouchStart={handlePointerDown}
-        onTouchEnd={handlePointerUp}
-        onTouchCancel={handlePointerUp}
+        // onMouseLeave={handlePointerUp}
+        // onTouchStart={handlePointerDown}
+        // onTouchEnd={handlePointerUp}
+        // onTouchCancel={handlePointerUp}
       >
+        {/* Show speech input above the microphone */}
+        <div className="mb-4 text-lg text-red-700 min-h-[2em]">
+          Speech input: {speechInput}
+        </div>
         <span
           className={isPulsating ? "animate-pulse" : ""}
           style={isPulsating ? { animationDuration: "1.0s" } : undefined}
-        >
+          >
           <VoiceIcon size={150} />
         </span>
+        {isPulsating && (
+          <div className="mb-4 text-lg text-red-700 min-h-[2em]">
+            "Listening..."
+          </div>
+        )}
       </div>
     </div>
   );
