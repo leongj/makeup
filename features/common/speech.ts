@@ -6,16 +6,14 @@ let speechConfig: SpeechSDK.SpeechConfig | undefined;
 let synthesizer: SpeechSDK.SpeechSynthesizer | undefined;
 let lastTokenFetchTime = 0;
 
+import { GetSpeechToken } from "./speech-service";
+
 async function getToken(): Promise<{ token: string; region: string } | null> {
   try {
-    const res = await fetch('/api/speech-token');
-    if (!res.ok) {
-      console.error("Failed to fetch speech token from backend:", res.status, await res.text());
-      return null;
-    }
-    const data = await res.json();
+    const data = await GetSpeechToken();
+    console.log("GetSpeechToken success");
     if (data.error) {
-      console.error("Error in speech token response:", data.error);
+      console.error("Error in speech token response:", data.errorMessage);
       return null;
     }
     return { token: data.token, region: data.region };
@@ -27,6 +25,10 @@ async function getToken(): Promise<{ token: string; region: string } | null> {
 
 export async function getSpeechConfig(): Promise<SpeechSDK.SpeechConfig | undefined> {
   const now = Date.now();
+  if (speechConfig) {
+    console.log("Existing speech config.");
+  }
+
   if (!speechConfig || (now - lastTokenFetchTime > SPEECH_TOKEN_EXPIRY_MS)) {
     console.log("Speech token expired or not set, attempting to refresh...");
     const tokenData = await getToken();
@@ -61,9 +63,9 @@ export async function speakText(textToSpeak: string): Promise<void> {
     // This simple check might not be enough if the internal state of config can change without the object reference changing.
     // However, fromAuthorizationToken likely returns a new object or updates in a way that requires re-init.
     // if (synthesizer.speechConfig !== config) {
-        console.log("Reinitializing synthesizer with new config.");
-        synthesizer.close();
-        synthesizer = new SpeechSDK.SpeechSynthesizer(config);
+        // console.log("Reinitializing synthesizer with new config.");
+        // synthesizer.close();
+        // synthesizer = new SpeechSDK.SpeechSynthesizer(config);
     // }
   }
 
