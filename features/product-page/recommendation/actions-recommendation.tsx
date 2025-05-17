@@ -6,6 +6,12 @@ import { AzureOpenAI } from "../../common/azure-openai/azure";
 import { Loading } from "../../common/loading";
 import { Markdown } from "../../common/markdown";
 import { LIPSTICK_PRODUCTS, Product } from "../products";
+import React from "react";
+// Product component for rendering a product by id
+const ProductComponent = ({ id }: { id: string }) => {
+  // You can expand this to fetch more product info if needed
+  return <div><strong>Product:</strong> <span>{id}</span></div>;
+};
 import { RecommendationSystemPrompt } from "./prompt";
 import fs from "fs";
 import path from "path";
@@ -66,8 +72,20 @@ export const generateRecommendation = async (props: Props) => {
 
   let updatedSystemPrompt = RecommendationSystemPrompt;
   updatedSystemPrompt = updatedSystemPrompt.replace(/{brand}/g, selectedProduct.brand);
-  updatedSystemPrompt = updatedSystemPrompt.replace(/{collectionName}/g, selectedProduct.collectionName);
+  updatedSystemPrompt = updatedSystemPrompt.replace(/{productName}/g, selectedProduct.productName);
   updatedSystemPrompt = updatedSystemPrompt.replace(/{occasion}/g, occasion);
+  updatedSystemPrompt = updatedSystemPrompt.replace(
+    /{shade_data}/g,
+    selectedProduct.shades && selectedProduct.shades.length > 0
+      ? [
+          '| Product Id | Shade name |',
+          '|------------|------------|',
+          ...selectedProduct.shades.map(
+            (shade) => `| ${shade.id} | ${shade.name} |`
+          ),
+        ].join('\n')
+      : 'No shades available.'
+  );
 
 
   const triggerAI = async () => {
@@ -88,7 +106,7 @@ export const generateRecommendation = async (props: Props) => {
             content: [
               {
                 type: "text",
-                text: imgDetail.type === 'selfie' ? "This is a selfie of the user." : `This is a swatch image of lipstick shades for the ${selectedProduct.brand} lipstick \"${selectedProduct.collectionName}\".`
+                text: imgDetail.type === 'selfie' ? "This is a selfie of the user." : `This is a swatch image of lipstick shades for the ${selectedProduct.brand} lipstick \"${selectedProduct.productName}\".`
               },
               {
                 type: "image_url",
@@ -119,7 +137,7 @@ export const generateRecommendation = async (props: Props) => {
           typeof imageContent === "object" && imageContent?.type === "image_url"
         ) {
           console.log(`User message ${index} (Text):`, textContent.text);
-          console.log(`User message ${index} (Image URL prefix):`, imageContent.image_url.url.substring(0, 50) + "...");
+          console.log(`User message ${index} (Image):`, imageContent.image_url.url.substring(0, 50) + "...");
         } else {
           console.log("User message (raw):", message);
         }
@@ -135,22 +153,74 @@ export const generateRecommendation = async (props: Props) => {
           },
           ...messages,
         ],
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "RecommendationResponse",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                recommendation: { type: "string" },
+                products: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      productId: { type: "string" }
+                    },
+                    required: ["productId"],
+                    additionalProperties: false
+                  }
+                }
+              },
+              required: ["recommendation", "products"],
+              additionalProperties: false
+            }
+          }
+        }
       });
 
-      let fullText = "";
+      let responseObj: any = {};
+      let buffer = "";
 
       for await (const chunk of stream) {
-        fullText += chunk.choices[0]?.delta?.content || "";
+        // Try to parse as JSON if possible, otherwise buffer
+        const delta = chunk.choices[0]?.delta?.content;
+        if (delta) buffer += delta;
+
+        // Try to parse JSON for live preview (optional, can be improved)
+        try {
+          responseObj = JSON.parse(buffer);
+        } catch {
+          // Not yet valid JSON, keep buffering
+        }
 
         ui.update(
           <>
-            <Markdown content={fullText} />
+            <Markdown content={responseObj.recommendation || buffer} />
+            {Array.isArray(responseObj.products) && responseObj.products.map((p: any, i: number) => (
+              <ProductComponent key={p.productId || i} id={p.productId} />
+            ))}
             <Loading />
           </>
         );
       }
 
-      ui.done(<Markdown content={fullText} />);
+      // Final parse and render
+      try {
+        responseObj = JSON.parse(buffer);
+      } catch {
+        responseObj = { recommendation: buffer, products: [] };
+      }
+      ui.done(
+        <>
+          <Markdown content={responseObj.recommendation} />
+          {Array.isArray(responseObj.products) && responseObj.products.map((p: any, i: number) => (
+            <ProductComponent key={p.productId || i} id={p.productId} />
+          ))}
+        </>
+      );
     } catch (error) {
       console.error("Error in triggerAI:", error);
       // Check if the error is an APIError and has a message
