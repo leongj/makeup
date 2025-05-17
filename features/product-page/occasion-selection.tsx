@@ -41,17 +41,23 @@ export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
 
   return (
     <div className="flex-1 w-full flex flex-col">
-      <div className="w-full flex flex-row flex-wrap justify-center items-center gap-4 mt-20">
-        {exampleOccasions.map((option) => (
-          <button
-            key={option.text}
-            onClick={() => onSelectOccasion(option.text)}
-            className="flex-1 max-w-md h-16 flex items-center justify-center bg-transparent hover:bg-red-700 text-red-900 hover:text-white py-3 px-4 rounded-lg shadow-md transition duration-150 ease-in-out border border-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-          >
-            {option.text}
-          </button>
-        ))}
-      </div>
+      {(!speechInput || speechInput.trim() === "") ? (
+        <div className="w-full flex flex-row flex-wrap justify-center items-stretch gap-4 mt-20">
+          {exampleOccasions.map((option) => (
+            <button
+              key={option.text}
+              onClick={() => onSelectOccasion(option.text)}
+              className="flex-1 max-w-md min-h-16 h-full flex items-center justify-center bg-transparent hover:bg-red-700 text-red-900 hover:text-white py-3 px-4 rounded-lg shadow-md transition duration-150 ease-in-out border border-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+            >
+              {option.text}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="w-full flex flex-row flex-wrap justify-center items-center gap-4 mt-20">
+          <div className="text-2xl text-center text-red-900 font-semibold">"{speechInput}"</div>
+        </div>
+      )}
 
       <div
         className="flex-grow w-full flex flex-col justify-center items-center mt-4"
@@ -63,25 +69,21 @@ export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
         onMouseDown={handlePointerDown}
         onMouseUp={handlePointerUp}
         // onMouseLeave={handlePointerUp}
-        // onTouchStart={handlePointerDown}
-        // onTouchEnd={handlePointerUp}
+        onTouchStart={handlePointerDown}
+        onTouchEnd={handlePointerUp}
         // onTouchCancel={handlePointerUp}
       >
-        {/* Show speech input above the microphone */}
-        <div className="mb-4 text-lg text-red-700 min-h-[2em]">
-          Speech input: {speechInput}
-        </div>
         <span
           className={isPulsating ? "animate-pulse" : ""}
           style={isPulsating ? { animationDuration: "1.0s" } : undefined}
           >
           <VoiceIcon size={150} />
         </span>
-        {isPulsating && (
-          <div className="mb-4 text-lg text-red-700 min-h-[2em]">
+        <div className="mb-4 text-lg text-red-700 min-h-[2em]">
+          {isPulsating && (
             "Listening..."
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
