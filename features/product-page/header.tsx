@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAltImages } from "./store";
 import { useEffect } from "react";
 
-const TagLine = "Demo powered by Microsoft AI";
-const SpokenText = "Welcome to the Lipstick demo! Let's find your perfect shade. Tap anywhere to start.";
+const TagLine = "A demo powered by Microsoft AI";
 
 export const Header = () => {
   const images = useAltImages();
@@ -62,7 +61,7 @@ export const LandingPage = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="flex gap-4 items-center col-start-2 col-span-10 text-6xl font-semibold bg-gradient-to-r from-red-500 to-red-800 bg-clip-text text-transparent" // Changed to red gradient
+          className="flex gap-4 italic items-center col-start-2 col-span-10 text-6xl font-semibold bg-gradient-to-r from-red-500 to-red-800 bg-clip-text text-transparent" // Changed to red gradient
         >
           <span>Lipstick</span>
         </motion.h1>
@@ -72,7 +71,7 @@ export const LandingPage = () => {
           transition={{ delay: 0.4 }}
           className="text-xl "
         >
-          Powered by{" "}
+          A demo by{" "}
           <span className="font-semibold bg-gradient-to-r from-red-500 to-red-800 bg-clip-text text-transparent">
             Microsoft AI
           </span>
@@ -99,7 +98,7 @@ export const Links = () => {
         transition={{ delay: 1.2 }}
         className="text-xl text-red-800"
       >
-        Tap anywhere to start
+        Tap anywhere to start <ArrowRight className="inline" />
       </motion.p>
     </div>
   );
