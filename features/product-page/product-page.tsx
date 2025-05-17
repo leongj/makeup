@@ -88,7 +88,7 @@ export const ProductPage = () => {
                 <motion.p
                   initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
                   animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
-                  transition={{ delay: 1 }}
+                  transition={{ delay: 0 }}
                   className="text-2xl font-semibold text-red-600 mt-6 mb-4"
                 >
                   Take a selfie so I can see you!
@@ -96,7 +96,7 @@ export const ProductPage = () => {
                 <motion.p
                   initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
                   animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
-                  transition={{ delay: 1.2 }}
+                  transition={{ delay: 0.5 }}
                   className="text-lg text-red-800"
                 >
                   (Tap the screen to take a picture)
@@ -112,29 +112,7 @@ export const ProductPage = () => {
 
         {workflowStep === "occasionSelection" && capturedImage && (
           <FadeIn className="flex-1 flex flex-col">
-            <>
-              <div className="flex flex-col items-center justify-center text-center">
-                <motion.p
-                  initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
-                  animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
-                  transition={{ delay: 1 }}
-                  className="text-2xl font-semibold text-red-600 mt-6 mb-4"
-                >
-                  Great! Now tell me about the occasion
-                </motion.p>
-                <motion.p
-                  initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
-                  animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
-                  transition={{ delay: 1.2 }}
-                  className="text-lg text-red-800"
-                >
-                  (Tap and hold to talk, or choose an example)
-                </motion.p>
-              </div>
-              {/* Optionally display the captured image */}
-              {/* <img src={capturedImage} alt="Captured forearm" className="mx-auto my-4 max-w-xs rounded-lg shadow-md" /> */}
-              <OccasionSelection onSelectOccasion={handleOccasionSelected} />
-            </>
+            <OccasionSelection onSelectOccasion={handleOccasionSelected} />
           </FadeIn>
         )}
 

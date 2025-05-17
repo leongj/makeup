@@ -53,7 +53,7 @@ export const AppBarButton = ({
       )}
       {...props}
     >
-      <span className="flex gap-2 p-3 text-xs items-center text-red-400 hover:text-red-700">
+      <span className="flex gap-2 p-1 text-xs items-center text-red-400 hover:text-red-700">
         {children}
       </span>
     </button>
