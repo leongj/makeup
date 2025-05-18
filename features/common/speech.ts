@@ -85,6 +85,7 @@ export async function speakText(textToSpeak: string): Promise<void> {
         console.error("Speech synthesis canceled, " + result.errorDetails);
       }
       localSynthesizer.close();
+      console.log("Closed synth.");
     },
     err => {
       console.trace("Error during synthesis - " + err);

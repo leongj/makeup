@@ -18,12 +18,16 @@ export const Recommendation: React.FC<RecommendationProps> = ({
   const images = useAltImages(); // This might be for alternative images, not the main one
   const recommendation = useRecommendation(); // This is likely where the AI description will live
 
+
+  // Helper to strip all ** from text
+  function getPlainText(text: string) {
+    return text.replace(/\*/g, "");
+  }
+
   // Speak only once when recommendation.text is set and not loading
   useEffect(() => {
     if (recommendation.text && !recommendation.isLoading) {
-      // Strip all ** from the spoken text
-      const plainText = recommendation.text.replace(/\*/g, "");
-      speakText(plainText);
+      speakText(getPlainText(recommendation.text));
     }
   }, [recommendation.text, recommendation.isLoading]);
 
@@ -73,6 +77,17 @@ export const Recommendation: React.FC<RecommendationProps> = ({
           <h2 className="text-xl font-semibold text-red-700">
             AI Recommendation:
           </h2>
+          <button
+            className="mb-4 mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400"
+            onClick={() => {
+              if (recommendation.text) {
+                speakText(getPlainText(recommendation.text));
+              }
+            }}
+            type="button"
+          >
+            SPEAK
+          </button>
           <div className="container mx-auto max-w-xl flex flex-col px-4 rounded-lg">
             <Markdown content={recommendation.text} />
           </div>
