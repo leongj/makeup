@@ -14,19 +14,21 @@ export type ImageItemState = {
   index: number;
 };
 
-export type ImageDescriptionState = {
+export type RecommendationState = {
   text: string;
   products: { productId: string }[];
   system: string;
   isLoading: boolean;
   error?: string;
+  brand: string;
+  productName: string;
 };
 
 type AppState = {
   uploadRef: HTMLInputElement | null;
   files: FileList | null;
   altImages: ImageItemState[];
-  recommendation: ImageDescriptionState;
+  recommendation: RecommendationState;
   speechInput: string;
 };
 
@@ -40,6 +42,8 @@ const initialState: AppState = {
     system: RecommendationSystemPrompt,
     isLoading: false,
     error: undefined,
+    brand: "",
+    productName: ""
   },
   speechInput: "",
 };
@@ -68,25 +72,6 @@ export const setUploadRef = (ref: HTMLInputElement) => {
   useAppStore.setState((state) => ({ ...state, uploadRef: ref }));
 };
 
-export const updateFiles = async (files: FileList) => {
-  useAppStore.setState((state) => ({
-    ...initialState,
-    files,
-    recommendation: {
-      ...state.recommendation,
-      text: "",
-    },
-  }));
-
-  const items = [...files].map((file, i) => {
-    return startGeneratingAltText(file, i);
-  });
-
-  await Promise.all(items);
-
-  startGeneratingRecommendation();
-};
-
 export const updateSystemPrompt = (system: string) => {
   useAppStore.setState((state) => ({
     ...state,
@@ -110,6 +95,8 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
       ...state.recommendation,
       text: "",
       products: [],
+      brand: "",
+      productName: "",
       isLoading: true,
       error: undefined,
     },
@@ -155,6 +142,8 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
         products: result.products || [],
         isLoading: false,
         error: result.error || undefined,
+        brand: result.brand || "",
+        productName: result.productName || "",
       },
     }));
   } catch (error) {
@@ -216,53 +205,6 @@ export const processCapture = async (capturedImageBase64: string) => {
   } catch (error) {
     console.error("Error processing swatch image:", error);
     // Optionally, handle the error, e.g., by not adding the image or adding a placeholder
-  }
-
-  // Trigger product description generation
-  // startGeneratingDescription(); // We will call generateRecommendationForOccasion from ProductPage instead
-};
-
-const startGeneratingRecommendation = async () => {
-  // This function might need to be re-evaluated or deprecated if
-  // generateRecommendationForOccasion is the primary way to get descriptions.
-  // For now, let's assume it might still be used by updateFiles flow.
-  const state = useAppStore.getState();
-  if (state.altImages.length === 0) {
-    console.warn("startGeneratingRecommendation called with no images in altImages.");
-    return;
-  }
-  useAppStore.setState((state) => ({
-    ...state,
-    recommendation: { ...state.recommendation, isLoading: true, text: "" },
-  }));
-
-  const images = state.altImages.map((image) => image.base64);
-
-  try {
-    const result = await generateRecommendation({
-      images,
-      // TODO: Decide how to handle 'occasion' for this flow or deprecate this function
-      occasion: "general use", // Added a default occasion, this needs review
-    });
-
-    useAppStore.setState((state) => ({
-      ...state,
-      recommendation: {
-        ...state.recommendation,
-        text: result,
-        isLoading: false,
-      },
-    }));
-  } catch (error) {
-    console.error(error);
-    useAppStore.setState((state) => ({
-      ...state,
-      recommendation: {
-        ...state.recommendation,
-        text: "Failed to generate description.",
-        isLoading: false,
-      },
-    }));
   }
 };
 

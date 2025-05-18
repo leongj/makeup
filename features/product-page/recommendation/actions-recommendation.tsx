@@ -36,7 +36,7 @@ export const generateRecommendation = async (props: Props) => {
   const { images, occasion } = props;
 
   if (!images || images.length === 0) {
-    return { error: "No user image provided.", recommendation: "", products: [] };
+    return { error: "No user image provided.", recommendation: "", products: [], brand: "", productName: "" };
   }
 
   const userSelfieDataUrl = images[0];
@@ -62,7 +62,7 @@ export const generateRecommendation = async (props: Props) => {
     // else keep jpeg or add more types
   } catch (error) {
     console.error("Error reading swatch image:", error);
-    return { error: "Error processing product image.", recommendation: "", products: [] };
+    return { error: "Error processing product image.", recommendation: "", products: [], brand: selectedProduct.brand, productName: selectedProduct.productName  };
   }
 
   let updatedSystemPrompt = RecommendationSystemPrompt;
@@ -176,14 +176,22 @@ export const generateRecommendation = async (props: Props) => {
     });
 
     // The response should be in response.choices[0].message.content as a stringified JSON
-    let resultObj = { recommendation: '', products: [] };
+    let resultObj = { recommendation: '', products: [], brand: selectedProduct.brand, productName: selectedProduct.productName };
     try {
       const content = response.choices[0]?.message?.content;
       if (typeof content === 'string') {
-        resultObj = JSON.parse(content);
+        const parsed = JSON.parse(content);
+        resultObj = {
+          ...resultObj,
+          ...parsed,
+        };
       } else if (typeof content === 'object' && content !== null) {
-        resultObj = content as any;
+        resultObj = {
+          ...resultObj,
+          ...(content as any),
+        };
       }
+      console.log("==== DEBUG Recommendation resultObj:", resultObj);
     } catch (e) {
       console.error('Failed to parse recommendation response:', e);
     }
@@ -194,6 +202,6 @@ export const generateRecommendation = async (props: Props) => {
     if (error instanceof Error && 'message' in error) {
       errorMessage = (error as any).message;
     }
-    return { error: errorMessage, recommendation: "", products: [] };
+    return { error: errorMessage, recommendation: "", products: [], brand: selectedProduct.brand, productName: selectedProduct.productName  };
   }
 };
