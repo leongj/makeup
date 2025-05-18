@@ -48,22 +48,22 @@ export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
           initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
           animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
           transition={{ delay: 0 }}
-          className="text-2xl font-semibold text-red-600 mt-6 mb-4"
+          className="text-2xl font-semibold text-red-600 mt-6 mb-2"
         >
-          Great! Now tell me about the occasion
+          What's the occasion?
         </motion.p>
         <motion.p
           initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
           animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
           transition={{ delay: 0.5 }}
-          className="text-lg text-red-800"
+          className="text-m text-red-800"
         >
-          (Tap and hold to talk, or choose an example)
+          (Tap and hold to talk, <br />or choose an example)
         </motion.p>
       </div>
 
       {(!speechInput || speechInput.trim() === "") ? (
-        <div className="w-full flex flex-row flex-wrap justify-center items-stretch gap-4 mt-20">
+        <div className="w-full flex flex-row flex-wrap justify-center items-stretch gap-4 mt-5">
           {exampleOccasions.map((option, idx) => (
             <motion.button
               key={option.text}

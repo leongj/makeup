@@ -1,6 +1,6 @@
 export const exampleOccasions = [
   { text: "everyday wear, with a variety of colours", label: "Everyday" },
-  { text: "a fancy dinner in a black dress", label: "Fancy Dinner" },
+  { text: "fancy dinner in a black dress", label: "Fancy Dinner" },
   { text: "date night, with something red", label: "Date Night" },
 ];
 
