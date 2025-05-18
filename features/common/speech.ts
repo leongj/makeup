@@ -54,37 +54,41 @@ export async function speakText(textToSpeak: string): Promise<void> {
     return;
   }
 
-  // Recreate synthesizer if it doesn't exist or if config might have changed (though less likely with token refresh)
-  if (!synthesizer) {
-    console.log("Creating new SpeechSynthesizer instance.");
-    synthesizer = new SpeechSDK.SpeechSynthesizer(config);
-  } else {
-    // If the config object itself was replaced, we need a new synthesizer
-    // This simple check might not be enough if the internal state of config can change without the object reference changing.
-    // However, fromAuthorizationToken likely returns a new object or updates in a way that requires re-init.
-    // if (synthesizer.speechConfig !== config) {
-        // console.log("Reinitializing synthesizer with new config.");
-        // synthesizer.close();
-        // synthesizer = new SpeechSDK.SpeechSynthesizer(config);
-    // }
-  }
+  // Use PullAudioOutputStream and Web Audio API for maximum compatibility
+  const audioStream = SpeechSDK.PullAudioOutputStream.create();
+  const audioConfig = SpeechSDK.AudioConfig.fromStreamOutput(audioStream);
+  const localSynthesizer = new SpeechSDK.SpeechSynthesizer(config, audioConfig);
 
-  synthesizer.speakTextAsync(
+  // Web Audio API setup
+  const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+  localSynthesizer.speakTextAsync(
     textToSpeak,
     result => {
       if (result.reason === SpeechSDK.ResultReason.SynthesizingAudioCompleted) {
         console.log("Speech synthesis completed successfully.");
+        // Decode and play audio using Web Audio API
+        const audioData = result.audioData;
+        audioContext.decodeAudioData(
+          audioData,
+          buffer => {
+            const bufferSource = audioContext.createBufferSource();
+            bufferSource.buffer = buffer;
+            bufferSource.connect(audioContext.destination);
+            bufferSource.start(0);
+          },
+          error => {
+            console.error("Error decoding audio data:", error);
+          }
+        );
       } else {
         console.error("Speech synthesis canceled, " + result.errorDetails);
       }
-      // Do not close the synthesizer here if we want to reuse it.
-      // synthesizer.close(); 
+      localSynthesizer.close();
     },
     err => {
       console.trace("Error during synthesis - " + err);
-      // Potentially close and nullify synthesizer on critical error to force re-init next time
-      // synthesizer.close();
-      // synthesizer = undefined;
+      localSynthesizer.close();
     }
   );
 }
