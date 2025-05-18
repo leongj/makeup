@@ -1,6 +1,6 @@
 import { AppBarButton } from "../ui/app-bar/app-bar";
 import { ImageIcon } from "../ui/app-icons";
-import { setUploadRef, updateFiles, useAppStore } from "../product-page/store";
+import { setUploadRef, useAppStore } from "../product-page/store";
 
 export const UploadImage = () => {
   const uploadRef = useAppStore((state) => state.uploadRef);
@@ -21,7 +21,7 @@ export const UploadImage = () => {
         className=""
         onChange={(event) => {
           if (event.target.files && uploadRef) {
-            updateFiles(event.target.files);
+            // updateFiles(event.target.files);
             uploadRef.value = "";
           }
         }}
