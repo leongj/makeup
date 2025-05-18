@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import React, { useState } from "react";
 import Webcam from "react-webcam";
 import { capture, clearScreenshot, useCameraStore } from "../real-time-page/camera/camera-store";
+import { urlToBase64 } from "./store";
 import { cameraClickAudio } from "../common/audio-player";
 
 export const Screenshot = () => {
@@ -73,6 +74,27 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
   // Show the captured image if present, otherwise use the screenshot from store
   const displayImg = capturedImg || screenshot;
 
+  // Handler for TEST button: simulates capture using /test_selfie.jpg
+  const handleTestCapture = () => {
+    setFlash(true);
+    cameraClickAudio.play();
+    setTimeout(async () => {
+      const { base64 } = await urlToBase64("/test_selfie.jpg");
+      useCameraStore.setState((state) => ({
+        ...state,
+        screenshot: base64,
+        shutterCount: state.shutterCount + 1,
+      }));
+      setCapturedImg(base64);
+      setFlash(false);
+      setTimeout(() => {
+        if (onPhotoCaptured) {
+          onPhotoCaptured(base64);
+        }
+      }, 500);
+    }, 180);
+  };
+
   return (
     <div className="relative flex flex-col items-center justify-center">
       <div className="relative">
@@ -99,31 +121,41 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
             </div>
           </div>
         ) : (
-          <div
-            className="relative cursor-pointer"
-            onClick={handleCapture}
-          >
-            <Webcam
-              ref={webcamRef}
-              className="rounded-3xl"
-              videoConstraints={{
-                // facingMode: facingMode,
-                facingMode: { exact: "user" },
-                // facingMode: "environment", // use for separate webcam testing
-                // aspectRatio: 11 / 16,
-                height: 600,
-              }}
-            />
-            {/* Flash overlay */}
-            {flash && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 1, 0] }}
-                transition={{ duration: 0.18, ease: "easeIn" }}
-                className="absolute inset-0 rounded-3xl pointer-events-none"
-                style={{ background: "white" }}
+          <div className="relative flex flex-col items-center">
+            <div
+              className="relative cursor-pointer"
+              onClick={handleCapture}
+            >
+              <Webcam
+                ref={webcamRef}
+                className="rounded-3xl"
+                videoConstraints={{
+                  // facingMode: facingMode,
+                  // facingMode: { exact: "user" },
+                  facingMode: "environment", // use for separate webcam testing
+                  // aspectRatio: 11 / 16,
+                  height: 600,
+                }}
               />
-            )}
+              {/* Flash overlay */}
+              {flash && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: 0.18, ease: "easeIn" }}
+                  className="absolute inset-0 rounded-3xl pointer-events-none"
+                  style={{ background: "white" }}
+                />
+              )}
+            </div>
+            {/* TEST button below the camera */}
+            <button
+              type="button"
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+              onClick={handleTestCapture}
+            >
+              TEST
+            </button>
           </div>
         )}
       </div>
