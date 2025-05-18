@@ -14,7 +14,6 @@ export const LIPSTICK_PRODUCTS: Product[] = [
     productName: "Hot Lips",
     swatchImage: "ct-hotlips-swatch.jpg",
     shades: [
-      { id: "ct-hotlips-001", name: "Bosworth's Beauty" },
       { id: "ct-hotlips-002", name: "Carina's Love" },
       { id: "ct-hotlips-003", name: "Nude Kate" },
       { id: "ct-hotlips-004", name: "Kim KW" },
@@ -27,7 +26,6 @@ export const LIPSTICK_PRODUCTS: Product[] = [
       { id: "ct-hotlips-011", name: "Hot Emily" },
       { id: "ct-hotlips-012", name: "Miranda May" },
       { id: "ct-hotlips-013", name: "Tell Laura" },
-      { id: "ct-hotlips-014", name: "Hell's Bells" },
       { id: "ct-hotlips-015", name: "Kidman's Kiss" },
       { id: "ct-hotlips-016", name: "Very Victoria" },
     ],
@@ -46,7 +44,7 @@ export const LIPSTICK_PRODUCTS: Product[] = [
     ],
   },
   {
-    brand: "Loreal",
+    brand: "L'oréal",
     productName: "Color Riche",
     swatchImage: "loreal-colorriche-swatch.webp",
     shades: [
