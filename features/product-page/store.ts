@@ -15,9 +15,11 @@ export type ImageItemState = {
 };
 
 export type ImageDescriptionState = {
-  text: ReactNode;
+  text: string;
+  products: { productId: string }[];
   system: string;
-  isLoading: boolean; // Added isLoading
+  isLoading: boolean;
+  error?: string;
 };
 
 type AppState = {
@@ -34,8 +36,10 @@ const initialState: AppState = {
   altImages: [],
   recommendation: {
     text: "",
+    products: [],
     system: RecommendationSystemPrompt,
-    isLoading: false, // Initialized isLoading
+    isLoading: false,
+    error: undefined,
   },
   speechInput: "",
 };
@@ -104,8 +108,10 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
     altImages: [],
     recommendation: {
       ...state.recommendation,
-      text: "", // Clear previous description
+      text: "",
+      products: [],
       isLoading: true,
+      error: undefined,
     },
   }));
 
@@ -137,18 +143,18 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
   try {
     // Now we get both images from the altImages state
     const images = useAppStore.getState().altImages.map(image => image.base64);
-    
     const result = await generateRecommendation({
-      images: images, // Send both the forearm image and swatch product image
+      images: images,
       occasion: occasion,
     });
-
     useAppStore.setState((state) => ({
       ...state,
       recommendation: {
         ...state.recommendation,
-        text: result, // This is the streamable UI
-        isLoading: false, // Set to false as the stream itself will complete
+        text: result.recommendation || "",
+        products: result.products || [],
+        isLoading: false,
+        error: result.error || undefined,
       },
     }));
   } catch (error) {
@@ -157,8 +163,10 @@ export const generateRecommendationForOccasion = async (base64Image: string, occ
       ...state,
       recommendation: {
         ...state.recommendation,
-        text: "Failed to generate recommendation.", // Show error message
+        text: "Failed to generate recommendation.",
+        products: [],
         isLoading: false,
+        error: (error instanceof Error ? error.message : String(error)) || "Unknown error",
       },
     }));
   }

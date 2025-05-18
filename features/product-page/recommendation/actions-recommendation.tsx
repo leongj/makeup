@@ -1,6 +1,5 @@
 "use server";
 
-import { createStreamableUI } from "ai/rsc";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { AzureOpenAI } from "../../common/azure-openai/azure";
 import { Loading } from "../../common/loading";
@@ -34,12 +33,10 @@ const processDataUrl = (dataUrl: string): { base64: string; mimeType: string } =
 
 
 export const generateRecommendation = async (props: Props) => {
-  const ui = createStreamableUI(<Loading />);
   const { images, occasion } = props;
 
   if (!images || images.length === 0) {
-    ui.done(<Markdown content={"Error: No user image provided."} />);
-    return ui.value;
+    return { error: "No user image provided.", recommendation: "", products: [] };
   }
 
   const userSelfieDataUrl = images[0];
@@ -63,11 +60,9 @@ export const generateRecommendation = async (props: Props) => {
     if (extension === '.png') swatchMimeType = 'image/png';
     else if (extension === '.webp') swatchMimeType = 'image/webp';
     // else keep jpeg or add more types
-
   } catch (error) {
     console.error("Error reading swatch image:", error);
-    ui.done(<Markdown content={"Error processing product image."} />);
-    return ui.value;
+    return { error: "Error processing product image.", recommendation: "", products: [] };
   }
 
   let updatedSystemPrompt = RecommendationSystemPrompt;
@@ -88,36 +83,35 @@ export const generateRecommendation = async (props: Props) => {
   );
 
 
-  const triggerAI = async () => {
-    try {
-      const client = AzureOpenAI();
+  try {
+    const client = AzureOpenAI();
 
-      const processedUserSelfie = processDataUrl(userSelfieDataUrl);
+    const processedUserSelfie = processDataUrl(userSelfieDataUrl);
 
-      const imagesForAI = [
-        { type: 'selfie', base64: processedUserSelfie.base64, mimeType: processedUserSelfie.mimeType },
-        { type: 'swatch', base64: swatchImageBase64, mimeType: swatchMimeType }
-      ];
+    const imagesForAI = [
+      { type: 'selfie', base64: processedUserSelfie.base64, mimeType: processedUserSelfie.mimeType },
+      { type: 'swatch', base64: swatchImageBase64, mimeType: swatchMimeType }
+    ];
 
-      const messages: Array<ChatCompletionMessageParam> = imagesForAI.map(
-        (imgDetail) => {
-          return {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: imgDetail.type === 'selfie' ? "This is a selfie of the user." : `This is a swatch image of lipstick shades for the ${selectedProduct.brand} lipstick \"${selectedProduct.productName}\".`
+    const messages: Array<ChatCompletionMessageParam> = imagesForAI.map(
+      (imgDetail) => {
+        return {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: imgDetail.type === 'selfie' ? "This is a selfie of the user." : `This is a swatch image of lipstick shades for the ${selectedProduct.brand} lipstick \"${selectedProduct.productName}\".`
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:${imgDetail.mimeType};base64,${imgDetail.base64}`,
               },
-              {
-                type: "image_url",
-                image_url: {
-                  url: `data:${imgDetail.mimeType};base64,${imgDetail.base64}`,
-                },
-              },
-            ],
-          };
-        }
-      );
+            },
+          ],
+        };
+      }
+    );
 
       // DEBUG Log the image details
       console.log("==== DEBUG Image details:");
@@ -143,96 +137,63 @@ export const generateRecommendation = async (props: Props) => {
         }
       });
 
-      const stream = await client.chat.completions.create({
-        model: "gpt-4o",
-        stream: true,
-        messages: [
-          {
-            role: "system",
-            content: updatedSystemPrompt,
-          },
-          ...messages,
-        ],
-        response_format: {
-          type: "json_schema",
-          json_schema: {
-            name: "RecommendationResponse",
-            strict: true,
-            schema: {
-              type: "object",
-              properties: {
-                recommendation: { type: "string" },
-                products: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      productId: { type: "string" }
-                    },
-                    required: ["productId"],
-                    additionalProperties: false
-                  }
+    const response = await client.chat.completions.create({
+      model: "gpt-4o",
+      stream: false,
+      messages: [
+        {
+          role: "system",
+          content: updatedSystemPrompt,
+        },
+        ...messages,
+      ],
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "RecommendationResponse",
+          strict: true,
+          schema: {
+            type: "object",
+            properties: {
+              recommendation: { type: "string" },
+              products: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    productId: { type: "string" }
+                  },
+                  required: ["productId"],
+                  additionalProperties: false
                 }
-              },
-              required: ["recommendation", "products"],
-              additionalProperties: false
-            }
+              }
+            },
+            required: ["recommendation", "products"],
+            additionalProperties: false
           }
         }
-      });
-
-      let responseObj: any = {};
-      let buffer = "";
-
-      for await (const chunk of stream) {
-        // Try to parse as JSON if possible, otherwise buffer
-        const delta = chunk.choices[0]?.delta?.content;
-        if (delta) buffer += delta;
-
-        // Try to parse JSON for live preview (optional, can be improved)
-        try {
-          responseObj = JSON.parse(buffer);
-        } catch {
-          // Not yet valid JSON, keep buffering
-        }
-
-        ui.update(
-          <>
-            <Markdown content={responseObj.recommendation || buffer} />
-            {Array.isArray(responseObj.products) && responseObj.products.map((p: any, i: number) => (
-              <ProductComponent key={p.productId || i} id={p.productId} />
-            ))}
-            <Loading />
-          </>
-        );
       }
+    });
 
-      // Final parse and render
-      try {
-        responseObj = JSON.parse(buffer);
-      } catch {
-        responseObj = { recommendation: buffer, products: [] };
+    // The response should be in response.choices[0].message.content as a stringified JSON
+    let resultObj = { recommendation: '', products: [] };
+    try {
+      const content = response.choices[0]?.message?.content;
+      if (typeof content === 'string') {
+        resultObj = JSON.parse(content);
+      } else if (typeof content === 'object' && content !== null) {
+        resultObj = content as any;
       }
-      ui.done(
-        <>
-          <Markdown content={responseObj.recommendation} />
-          {Array.isArray(responseObj.products) && responseObj.products.map((p: any, i: number) => (
-            <ProductComponent key={p.productId || i} id={p.productId} />
-          ))}
-        </>
-      );
-    } catch (error) {
-      console.error("Error in triggerAI:", error);
-      // Check if the error is an APIError and has a message
-      let errorMessage = "Error generating recommendation.";
-      if (error instanceof Error && 'message' in error) {
-        errorMessage = (error as any).message; // Or more specific error parsing
-      }
-      ui.done(<Markdown content={errorMessage} />);
+    } catch (e) {
+      console.error('Failed to parse recommendation response:', e);
     }
-  };
-
-  triggerAI();
-
-  return ui.value;
+    return { error: '', ...resultObj };
+  } catch (error) {
+    console.error("Error generating recommendation:", error);
+    let errorMessage = "Error generating recommendation.";
+    if (error instanceof Error && 'message' in error) {
+      errorMessage = (error as any).message;
+    }
+    return { error: errorMessage, recommendation: "", products: [] };
+  }
 };

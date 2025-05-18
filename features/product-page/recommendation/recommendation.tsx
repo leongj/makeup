@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useAltImages, useRecommendation } from "../store";
 import { speakText } from "../../common/speech";
+import { Markdown } from "../../common/markdown";
 
 interface RecommendationProps {
   imageSrc: string | null;
@@ -16,31 +17,14 @@ export const Recommendation: React.FC<RecommendationProps> = ({
   const images = useAltImages(); // This might be for alternative images, not the main one
   const recommendation = useRecommendation(); // This is likely where the AI description will live
 
-  // o4-mini did something tricky here to catch the end of the
-  // recommendation text being rendered (it's a StreamableUI component).
-  // observe DOM mutations of the recommendation text and speak once settled
+  // Speak only once when recommendation.text is set and not loading
   useEffect(() => {
-    if (!recommendation.text) return;
-    const el = document.getElementById('recommendation-text');
-    if (!el) return;
-    let timer: number;
-    const observer = new MutationObserver(() => {
-      clearTimeout(timer);
-      timer = window.setTimeout(() => {
-        const text = el.textContent?.trim();
-        if (text) {
-          console.log('Speak on DOM mutation settled:', text);
-          speakText(text);
-          observer.disconnect();
-        }
-      }, 500);
-    });
-    observer.observe(el, { childList: true, subtree: true, characterData: true });
-    return () => {
-      clearTimeout(timer);
-      observer.disconnect();
-    };
-  }, [recommendation.text]);
+    if (recommendation.text && !recommendation.isLoading) {
+      // Strip all ** from the spoken text
+      const plainText = recommendation.text.replace(/\*/g, "");
+      speakText(plainText);
+    }
+  }, [recommendation.text, recommendation.isLoading]);
 
   // For now, let's display the passed props and the store content if available
   // We'll need to integrate the actual recommendation fetching logic later
@@ -58,13 +42,36 @@ export const Recommendation: React.FC<RecommendationProps> = ({
       <h2 className="text-2xl font-semibold text-red-700">
         AI Recommendation:
       </h2>
-      {recommendation.text ? (
-        <div
-          id="recommendation-text"
-          className="container mx-auto max-w-xl flex flex-col px-4 rounded-lg"
-        >
-          {recommendation.text}
-        </div>
+      {recommendation.isLoading ? (
+        <>
+          <div className="text-slate-900">Generating recommendation...</div>
+          <div className="my-4 flex justify-center">
+            <img
+              src="/icon-192x192.png"
+              alt="Loading..."
+              className="h-12 w-12 spin-flick"
+              style={{ animationDuration: '0.8s', animationIterationCount: 'infinite' }}
+            />
+          </div>
+        </>
+      ) : recommendation.error ? (
+        <div className="text-red-600">{recommendation.error}</div>
+      ) : recommendation.text ? (
+        <>
+          <div className="container mx-auto max-w-xl flex flex-col px-4 rounded-lg">
+            <Markdown content={recommendation.text} />
+          </div>
+          {recommendation.products && recommendation.products.length > 0 && (
+            <div className="w-full flex flex-col items-center gap-2 mt-4">
+              <h3 className="text-lg font-semibold">Recommended Products:</h3>
+              {recommendation.products.map((p, i) => (
+                <div key={p.productId || i} className="border rounded p-2 w-full max-w-md text-center">
+                  <strong>Product:</strong> <span>{p.productId}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       ) : (
         <p className="text-slate-900">
           {imageSrc && occasion

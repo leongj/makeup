@@ -1,3 +1,31 @@
+/* Flicked spin animation: speeds up, slows down, then flicks again */
+@keyframes spin-flick {
+  0% {
+    transform: rotate(80deg);
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+  }
+  10% {
+    transform: rotate(260deg);
+    animation-timing-function: cubic-bezier(0.5, 1.5, 0.5, 1);
+  }
+  60% {
+    transform: rotate(380deg);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.8, 0.2);
+  }
+  80% {
+    transform: rotate(430deg);
+    animation-timing-function: cubic-bezier(0.7, 0.1, 0.3, 0.9);
+  }
+  100% {
+    transform: rotate(440deg);
+  }
+}
+
+.spin-flick {
+  animation-name: spin-flick;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
