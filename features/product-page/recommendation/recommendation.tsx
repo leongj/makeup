@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useEffect } from "react";
 import { useAltImages, useRecommendation } from "../store";
 import { speakText } from "../../common/speech";
@@ -29,29 +28,26 @@ export const Recommendation: React.FC<RecommendationProps> = ({
   }, [recommendation.text, recommendation.isLoading]);
 
   // Helper to find product and shade info by shade id
-  function findProductAndShade(productId: string) {
+  function findShadeName(productId: string) {
     let productInfo = null;
-    let shadeInfo = null;
+    let shadeName = null;
     for (const prod of LIPSTICK_PRODUCTS) {
       if (prod.shades) {
         const foundShade = prod.shades.find((s) => s.id === productId);
         if (foundShade) {
           productInfo = prod;
-          shadeInfo = foundShade;
+          shadeName = foundShade;
           break;
         }
       }
     }
-    return { productInfo, shadeInfo };
+    return shadeName;
   }
-
-  // For now, let's display the passed props and the store content if available
-  // We'll need to integrate the actual recommendation fetching logic later
 
   if (!imageSrc && images.length === 0) {
     return (
-      <div className="text-center text-slate-500">
-        Generating AI recommendation...
+      <div className="text-center mt-20 text-slate-500">
+        Waiting for images...
       </div>
     );
   }
@@ -60,7 +56,7 @@ export const Recommendation: React.FC<RecommendationProps> = ({
     <div className="flex flex-col py-2 items-center">
       {recommendation.isLoading ? (
         <>
-          <div className="text-slate-900">Generating recommendation...</div>
+          <div className="text-xl text-red-700 mt-20">Finding your shade...</div>
           <div className="my-4 flex justify-center">
             <img
               src="/icon-192x192.png"
@@ -74,45 +70,47 @@ export const Recommendation: React.FC<RecommendationProps> = ({
         <div className="text-red-600">{recommendation.error}</div>
       ) : recommendation.text ? (
         <>
-          <h2 className="text-2xl font-semibold text-red-700">
+          <h2 className="text-xl font-semibold text-red-700">
             AI Recommendation:
           </h2>
           <div className="container mx-auto max-w-xl flex flex-col px-4 rounded-lg">
             <Markdown content={recommendation.text} />
           </div>
+          <hr className="w-full max-w-xl border-t-2 border-slate-200" />
           {recommendation.products && recommendation.products.length > 0 && (
             <div className="w-full flex flex-col items-center">
-              <h3 className="text-lg text-black font-semibold mb-2">
-                {/* Use brand and productName from recommendation if available */}
-                {typeof recommendation.brand === 'string' && typeof recommendation.productName === 'string' && recommendation.brand && recommendation.productName
-                  ? `${recommendation.brand} - ${recommendation.productName}`
-                  : "Recommended Products:"}
+              <h3 className="text-xl text-red-700 font-semibold my-4">
+                {recommendation.brand} - {recommendation.productName}
               </h3>
-              {recommendation.products.map((p, i) => {
-                // Find the product and shade info from LIPSTICK_PRODUCTS
-                const { productInfo, shadeInfo } = findProductAndShade(p.productId);
-                const imageUrl = p.productId ? `/${p.productId}.jpg` : undefined;
-                return (
-                  <div
-                    key={p.productId || i}
-                    className="border rounded p-2 w-full max-w-md flex items-center gap-4"
-                  >
-                    {imageUrl && (
-                      <img
-                        src={imageUrl}
-                        alt={shadeInfo ? shadeInfo.name : p.productId}
-                        className="h-24 w-24 object-contain rounded bg-white border"
-                        style={{ minWidth: 64 }}
-                      />
-                    )}
-                    <div className="flex-1 text-left">
-                      <div className="font-semibold text-black">
-                        {shadeInfo ? shadeInfo.name : p.productId}
-                      </div>
-                    </div>
+              {/* Display products in rows of 2, side-by-side */}
+              <div className="w-full flex flex-col items-center gap-4">
+                {Array.from({ length: Math.ceil(recommendation.products.length / 2) }).map((_, rowIdx) => (
+                  <div key={rowIdx} className="flex flex-row w-full max-w-2xl gap-4 justify-center">
+                    {recommendation.products.slice(rowIdx * 2, rowIdx * 2 + 2).map((p, colIdx) => {
+                      const shadeName = findShadeName(p.productId);
+                      const imageUrl = p.productId ? `/${p.productId}.jpg` : undefined;
+                      return (
+                        <div
+                          key={p.productId || colIdx}
+                          className="border rounded p-2 flex-1 min-w-[140px] max-w-xs flex flex-col items-center bg-white"
+                        >
+                          <div className="font-semibold text-m text-slate-700 text-center mb-2 min-h-[1.5em]">
+                            {shadeName ? shadeName.name : p.productId}
+                          </div>
+                          {imageUrl && (
+                            <img
+                              src={imageUrl}
+                              alt={shadeName ? shadeName.name : p.productId}
+                              className="object-contain rounded bg-white"
+                              style={{ minWidth: 64 }}
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
           )}
         </>
