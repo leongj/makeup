@@ -15,6 +15,7 @@ export class AudioPlayer {
    * Initialize and play the audio file
    */
   play(): void {
+    console.log(`Playing audio: ${this.audioPath}`);
     try {
       // Clean up any existing audio instance
       this.stop();
