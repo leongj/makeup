@@ -14,8 +14,8 @@ export const RecommendationSystemPrompt =
 
   {shade_data}
 
-  EXAMPLE RECOMMENDATION FORMAT:
-  I can see you have an (X) skin tone and (Y) hair. (or "Sorry, I couldn't see you." if no person in the photo)
+  RECOMMENDATION FORMAT:
+  I can see you have a <X> skin tone and <Y> hair.
 
   <comment on the **occasion**>.
 
