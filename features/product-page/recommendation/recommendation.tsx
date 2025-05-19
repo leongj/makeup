@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import * as motion from "motion/react-client"; // Added import
 import { useAltImages, useRecommendation } from "../store";
 import { getSpeechConfig } from "../../common/speech";
 import * as SpeechSDK from "microsoft-cognitiveservices-speech-sdk";
@@ -109,19 +110,34 @@ export const Recommendation: React.FC<RecommendationProps> = ({
             tabIndex={0}
             onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') speakText(getPlainText(recommendation.text)); }}
           >
-            <h2 className="text-xl font-semibold text-red-700 mb-2">
+            <motion.h2
+              initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
+              animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+              transition={{ delay: 0 }}
+              className="text-xl font-semibold text-red-700 mb-2"
+            >
               AI Recommendation:
-            </h2>
-            <div className="text-m text-red-800 mb-1">
+            </motion.h2>
+            <motion.div
+              initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
+              animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+              transition={{ delay: 0.5 }}
+              className="text-m text-red-800 mb-1"
+            >
               (Tap anywhere and I'll read it)
-            </div>
-            <div className="container mx-auto max-w-xl flex flex-col px-4 rounded-lg">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
+              animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
+              transition={{ delay: 1 }} // Adjusted delay for staggered animation
+              className="container mx-auto max-w-xl flex flex-col px-4 rounded-lg"
+            >
               <Markdown content={recommendation.text} />
-            </div>
+            </motion.div>
           </div>
           <hr className="w-full max-w-xl border-t-2 border-slate-200" />
           {recommendation.products && recommendation.products.length > 0 && (
-            <div className="w-full flex flex-col items-center">
+            <div className="w-full flex flex-col items-center animate-wipe-up">
               <h3 className="text-xl text-red-700 font-semibold my-4">
                 {recommendation.brand} - {recommendation.productName}
               </h3>
@@ -159,9 +175,7 @@ export const Recommendation: React.FC<RecommendationProps> = ({
         </>
       ) : (
         <p className="text-slate-900">
-          {imageSrc && occasion
-            ? "Generating recommendation..."
-            : "Please complete previous steps."}
+          
         </p>
       )}
     </div>

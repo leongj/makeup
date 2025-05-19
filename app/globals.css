@@ -34,3 +34,20 @@
   --color-icon-primary: 222 5% 90%;
   --color-icon-secondary: 111 114 185;
 }
+
+@keyframes wipe-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-wipe-up {
+  animation-delay: 1s; /* Added delay */
+  animation-name: wipe-up;
+  animation: wipe-up 0.5s ease-out forwards;
+}
