@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { useAltImages, useRecommendation } from "../store";
-import { speakText } from "../../common/speech";
+import { getSpeechConfig } from "../../common/speech";
+import * as SpeechSDK from "microsoft-cognitiveservices-speech-sdk";
 import { Markdown } from "../../common/markdown";
 import { LIPSTICK_PRODUCTS } from "../products";
 
@@ -25,11 +26,34 @@ export const Recommendation: React.FC<RecommendationProps> = ({
   }
 
   // Speak only once when recommendation.text is set and not loading
+  // Speak only once when recommendation.text is set and not loading
   useEffect(() => {
-    if (recommendation.text && !recommendation.isLoading) {
-      speakText(getPlainText(recommendation.text));
-    }
+    // Optionally, you can auto-speak here if desired, but for now, do nothing (manual SPEAK only)
   }, [recommendation.text, recommendation.isLoading]);
+
+  async function speakText(text: string) {
+    if (!recommendation.text) return;
+    const speechConfig = await getSpeechConfig();
+    if (!speechConfig) {
+      alert("Failed to get speech config. Please check your backend token service.");
+      return;
+    }
+
+    const audioConfig = SpeechSDK.AudioConfig.fromDefaultSpeakerOutput();
+    let synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
+    synthesizer.speakSsmlAsync(
+      `<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-AU-TinaNeural"><prosody rate="1.1" pitch="0%">${getPlainText(recommendation.text)}</prosody></voice></speak>`,
+      function (result: any) {
+        console.log("Speech Success", result);
+        synthesizer.close();
+      },
+      function (err: any) {
+        console.log("Speech Error", err);
+        synthesizer.close();
+      }
+    );
+  }
+
 
   // Helper to find product and shade info by shade id
   function findShadeName(productId: string) {
@@ -73,17 +97,14 @@ export const Recommendation: React.FC<RecommendationProps> = ({
       ) : recommendation.error ? (
         <div className="text-red-600">{recommendation.error}</div>
       ) : recommendation.text ? (
+
         <>
           <h2 className="text-xl font-semibold text-red-700">
             AI Recommendation:
           </h2>
           <button
             className="mb-4 mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400"
-            onClick={() => {
-              if (recommendation.text) {
-                speakText(getPlainText(recommendation.text));
-              }
-            }}
+            onClick={() => speakText(recommendation.text)}
             type="button"
           >
             SPEAK

@@ -1,17 +1,24 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
 
+
 import * as SpeechSDK from "microsoft-cognitiveservices-speech-sdk";
+import { getSpeechConfig } from "../../features/common/speech";
 
 
 export default function TestAudioIOS() {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const handleTestAudio = () => {
-    const sdkApiKey = "c285659291c54dceb780633a32bbfc80";
-    const sdkRegion = "australiaeast";
-    const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(sdkApiKey, sdkRegion);
-    speechConfig.speechSynthesisOutputFormat = SpeechSDK.SpeechSynthesisOutputFormat.Audio24Khz96KBitRateMonoMp3;
+  const handleTestAudio = async () => {
+    const speechConfig = await getSpeechConfig();
+    if (!speechConfig) {
+      alert("Failed to get speech config. Please check your backend token service.");
+      return;
+    }
+    // Optionally set output format or voice here if needed
+    // speechConfig.speechSynthesisOutputFormat = SpeechSDK.SpeechSynthesisOutputFormat.Audio24Khz96KBitRateMonoMp3;
+    // speechConfig.speechSynthesisVoiceName = "en-US-JennyNeural";
+
     const audioConfig = SpeechSDK.AudioConfig.fromDefaultSpeakerOutput();
     let synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
     synthesizer.speakSsmlAsync(
