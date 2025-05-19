@@ -94,18 +94,23 @@ export const Recommendation: React.FC<RecommendationProps> = ({
       ) : recommendation.text ? (
 
         <>
-          <h2 className="text-xl font-semibold text-red-700">
-            AI Recommendation:
-          </h2>
-          <button
-            className="mb-4 mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400"
+          <div
+            className="w-full max-w-xl mx-auto flex flex-col items-center cursor-pointer select-none group"
             onClick={() => speakText(getPlainText(recommendation.text))}
-            type="button"
+            title="Tap anywhere here and I'll read it"
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') speakText(getPlainText(recommendation.text)); }}
           >
-            SPEAK
-          </button>
-          <div className="container mx-auto max-w-xl flex flex-col px-4 rounded-lg">
-            <Markdown content={recommendation.text} />
+            <h2 className="text-xl font-semibold text-red-700 mb-2">
+              AI Recommendation:
+            </h2>
+            <div className="text-m text-red-800 mb-1">
+              (Tap anywhere and I'll read it)
+            </div>
+            <div className="container mx-auto max-w-xl flex flex-col px-4 rounded-lg">
+              <Markdown content={recommendation.text} />
+            </div>
           </div>
           <hr className="w-full max-w-xl border-t-2 border-slate-200" />
           {recommendation.products && recommendation.products.length > 0 && (
