@@ -25,14 +25,9 @@ export const Recommendation: React.FC<RecommendationProps> = ({
     return text.replace(/\*/g, "");
   }
 
-  // Speak only once when recommendation.text is set and not loading
-  // Speak only once when recommendation.text is set and not loading
-  useEffect(() => {
-    // Optionally, you can auto-speak here if desired, but for now, do nothing (manual SPEAK only)
-  }, [recommendation.text, recommendation.isLoading]);
-
   async function speakText(text: string) {
-    if (!recommendation.text) return;
+    if (!text) return;
+    console.log("Speaking text:", text);
     const speechConfig = await getSpeechConfig();
     if (!speechConfig) {
       alert("Failed to get speech config. Please check your backend token service.");
@@ -42,9 +37,9 @@ export const Recommendation: React.FC<RecommendationProps> = ({
     const audioConfig = SpeechSDK.AudioConfig.fromDefaultSpeakerOutput();
     let synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
     synthesizer.speakSsmlAsync(
-      `<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-AU-TinaNeural"><prosody rate="1.1" pitch="0%">${getPlainText(recommendation.text)}</prosody></voice></speak>`,
+      `<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-AU-TinaNeural"><prosody rate="1.1" pitch="0%">${text}</prosody></voice></speak>`,
       function (result: any) {
-        console.log("Speech Success", result);
+        console.log("Speech Success");
         synthesizer.close();
       },
       function (err: any) {
@@ -104,7 +99,7 @@ export const Recommendation: React.FC<RecommendationProps> = ({
           </h2>
           <button
             className="mb-4 mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400"
-            onClick={() => speakText(recommendation.text)}
+            onClick={() => speakText(getPlainText(recommendation.text))}
             type="button"
           >
             SPEAK
