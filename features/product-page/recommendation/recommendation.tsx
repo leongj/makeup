@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { useAltImages, useRecommendation } from "../store";
-import { speakText } from "../../common/speech";
+import { getSpeechConfig } from "../../common/speech";
+import * as SpeechSDK from "microsoft-cognitiveservices-speech-sdk";
 import { Markdown } from "../../common/markdown";
 import { LIPSTICK_PRODUCTS } from "../products";
 
@@ -18,14 +19,36 @@ export const Recommendation: React.FC<RecommendationProps> = ({
   const images = useAltImages(); // This might be for alternative images, not the main one
   const recommendation = useRecommendation(); // This is likely where the AI description will live
 
-  // Speak only once when recommendation.text is set and not loading
-  useEffect(() => {
-    if (recommendation.text && !recommendation.isLoading) {
-      // Strip all ** from the spoken text
-      const plainText = recommendation.text.replace(/\*/g, "");
-      speakText(plainText);
+
+  // Helper to strip all ** from text
+  function getPlainText(text: string) {
+    return text.replace(/\*/g, "");
+  }
+
+  async function speakText(text: string) {
+    if (!text) return;
+    console.log("Speaking text:", text);
+    const speechConfig = await getSpeechConfig();
+    if (!speechConfig) {
+      alert("Failed to get speech config. Please check your backend token service.");
+      return;
     }
-  }, [recommendation.text, recommendation.isLoading]);
+
+    const audioConfig = SpeechSDK.AudioConfig.fromDefaultSpeakerOutput();
+    let synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, audioConfig);
+    synthesizer.speakSsmlAsync(
+      `<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-AU-TinaNeural"><prosody rate="1.1" pitch="0%">${text}</prosody></voice></speak>`,
+      function (result: any) {
+        console.log("Speech Success");
+        synthesizer.close();
+      },
+      function (err: any) {
+        console.log("Speech Error", err);
+        synthesizer.close();
+      }
+    );
+  }
+
 
   // Helper to find product and shade info by shade id
   function findShadeName(productId: string) {
@@ -69,12 +92,25 @@ export const Recommendation: React.FC<RecommendationProps> = ({
       ) : recommendation.error ? (
         <div className="text-red-600">{recommendation.error}</div>
       ) : recommendation.text ? (
+
         <>
-          <h2 className="text-xl font-semibold text-red-700">
-            AI Recommendation:
-          </h2>
-          <div className="container mx-auto max-w-xl flex flex-col px-4 rounded-lg">
-            <Markdown content={recommendation.text} />
+          <div
+            className="w-full max-w-xl mx-auto flex flex-col items-center cursor-pointer select-none group"
+            onClick={() => speakText(getPlainText(recommendation.text))}
+            title="Tap anywhere here and I'll read it"
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') speakText(getPlainText(recommendation.text)); }}
+          >
+            <h2 className="text-xl font-semibold text-red-700 mb-2">
+              AI Recommendation:
+            </h2>
+            <div className="text-m text-red-800 mb-1">
+              (Tap anywhere and I'll read it)
+            </div>
+            <div className="container mx-auto max-w-xl flex flex-col px-4 rounded-lg">
+              <Markdown content={recommendation.text} />
+            </div>
           </div>
           <hr className="w-full max-w-xl border-t-2 border-slate-200" />
           {recommendation.products && recommendation.products.length > 0 && (

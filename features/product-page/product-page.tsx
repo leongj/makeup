@@ -46,6 +46,7 @@ export const ProductPage = () => {
 
   // Play the appropriate audio when workflow step changes
   useEffect(() => {
+    console.log("useEffect current workflow step:", workflowStep);
     // Stop any currently playing audio
     selfieAudio.stop();
     occasionAudio.stop();
