@@ -14,29 +14,27 @@ interface OccasionSelectionProps {
 export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
   onSelectOccasion,
 }) => {
+
   const [isPulsating, setIsPulsating] = useState(false);
-  const holdTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [isListening, setIsListening] = useState(false);
   const speechInput = useSpeechInput();
 
-  // Handlers for tap and hold
-  const handlePointerDown = () => {
-    console.log("pointer down");
-    if (holdTimeout.current) clearTimeout(holdTimeout.current); // Prevent overlap
-    holdTimeout.current = setTimeout(async () => {
+  // Handler for single tap to start/cancel recognition
+  const handleVoiceTap = async () => {
+    if (!isListening) {
+      setIsListening(true);
       setIsPulsating(true);
       // resetSpeechInput();
       console.log("Starting speech recognition...");
       await startRecognition();
-    }, 300); // hold for at least 300ms to trigger
-  };
-
-  const handlePointerUp = () => {
-    console.log("pointer up");
-    if (holdTimeout.current) clearTimeout(holdTimeout.current);
-    setIsPulsating(false);
-    stopRecognition();
-    if (speechInput && speechInput.length > 2) {
-      // onSelectOccasion(speechInput);
+    } else {
+      setIsListening(false);
+      setIsPulsating(false);
+      stopRecognition();
+      // Optionally, handle the speech input here
+      // if (speechInput && speechInput.length > 2) {
+      //   onSelectOccasion(speechInput);
+      // }
     }
   };
 
@@ -51,14 +49,6 @@ export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
           className="text-2xl font-semibold text-red-600 mt-6 mb-2"
         >
           What's the occasion?
-        </motion.p>
-        <motion.p
-          initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
-          animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
-          transition={{ delay: 0.5 }}
-          className="text-m text-red-800"
-        >
-          (Tap and hold to talk, <br />or choose an example)
         </motion.p>
       </div>
 
@@ -85,26 +75,28 @@ export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
 
       <div
         className="flex-grow w-full flex flex-col justify-center items-center mt-4"
-        onMouseDown={handlePointerDown}
-        onMouseUp={handlePointerUp}
-        onTouchStart={handlePointerDown}
-        onTouchEnd={handlePointerUp}
-        onTouchCancel={handlePointerUp}
+        onClick={handleVoiceTap}
+        style={{ cursor: 'pointer' }}
       >
         <motion.span
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 400, damping: 20, delay: 3 }}
-          className={isPulsating ? "animate-pulse" : ""}
+          className={isPulsating ? "animate-pulse flex flex-col items-center" : "flex flex-col items-center"}
           style={isPulsating ? { animationDuration: "1.0s" } : undefined}
         >
           <VoiceIcon size={150} />
+          <div className="my-4 text-lg text-red-700 min-h-[2em] w-full flex justify-center text-center">
+            {isPulsating ? (
+              <>
+                Listening... <br />
+                Tap again to submit
+              </>
+            ) : (
+              "Tap to start listening"
+            )}
+          </div>
         </motion.span>
-        <div className="mb-4 text-lg text-red-700 min-h-[2em]">
-          {isPulsating && (
-            "Listening..."
-          )}
-        </div>
       </div>
     </div>
   );
