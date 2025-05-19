@@ -52,6 +52,7 @@ export async function startRecognition() {
 
   recognizer.canceled = (s, e) => {
     console.log("[speech-to-text] canceled:", e.errorDetails);
+    alert("Speech error. Please try again.");
     // setSpeechInput(""); // Optionally clear input on cancel/error
   };
 
