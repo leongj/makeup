@@ -8,10 +8,18 @@ import { getSpeechConfig } from "./speech"; // Reuse token/config logic from TTS
 import { setSpeechInput } from "../product-page/store";
 
 let speechRecognizer: SpeechRecognizer | undefined = undefined;
+let speechConfigInstance: SpeechConfig | undefined = undefined;
+
+export async function initSpeechConfig() {
+  if (!speechConfigInstance) {
+    speechConfigInstance = await getSpeechConfig();
+  }
+  return speechConfigInstance;
+}
 
 export async function startRecognition() {
   console.log("[speech-to-text] startRecognition called");
-  const speechConfig = await getSpeechConfig();
+  const speechConfig = await initSpeechConfig();
   if (!speechConfig) {
     setSpeechInput(""); // Optionally clear input on error
     return;
@@ -30,6 +38,7 @@ export async function startRecognition() {
   );
 
   speechRecognizer = recognizer;
+  console.log("[speech-to-text] SpeechRecognizer initialized");
 
   recognizer.recognizing = (s, e) => {
     console.log("[speech-to-text] recognizing:", e.result.text);
@@ -60,4 +69,6 @@ export function stopRecognition() {
     speechRecognizer.stopContinuousRecognitionAsync();
     speechRecognizer = undefined;
   }
+  // Optionally clear the SpeechConfig if you want to force re-init on next use
+  // speechConfigInstance = undefined;
 }

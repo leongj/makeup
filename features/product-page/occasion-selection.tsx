@@ -2,9 +2,9 @@
 
 import { exampleOccasions } from "./occasion-examples";
 import { VoiceIcon } from "../ui/app-icons";
-import React, { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as motion from "motion/react-client";
-import { startRecognition, stopRecognition } from "../common/speech-to-text";
+import { startRecognition, stopRecognition, initSpeechConfig } from "../common/speech-to-text";
 import { useSpeechInput, resetSpeechInput } from "./store";
 
 interface OccasionSelectionProps {
@@ -14,10 +14,14 @@ interface OccasionSelectionProps {
 export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
   onSelectOccasion,
 }) => {
-
   const [isPulsating, setIsPulsating] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const speechInput = useSpeechInput();
+
+  useEffect(() => {
+    // Init Speech Config to make recognition a little more responsive (not sure it does a whole lot TBH)
+    initSpeechConfig();
+  }, []);
 
   // Handler for single tap to start/cancel recognition
   const handleVoiceTap = async () => {
