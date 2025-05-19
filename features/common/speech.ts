@@ -46,6 +46,8 @@ export async function getSpeechConfig(): Promise<SpeechSDK.SpeechConfig | undefi
   return speechConfig;
 }
 
+
+// TODO: This code isn't being used right now - it's done directly in the recommendation component
 export async function speakText(textToSpeak: string): Promise<void> {
   console.log(`speakText called with: "${textToSpeak}"`);
   const config = await getSpeechConfig();
