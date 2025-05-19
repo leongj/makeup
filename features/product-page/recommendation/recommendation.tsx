@@ -6,6 +6,7 @@ import { getSpeechConfig } from "../../common/speech";
 import * as SpeechSDK from "microsoft-cognitiveservices-speech-sdk";
 import { Markdown } from "../../common/markdown";
 import { LIPSTICK_PRODUCTS } from "../products";
+import { recommendationAudio } from "../../common/audio-player";
 
 interface RecommendationProps {
   imageSrc: string | null;
@@ -18,6 +19,12 @@ export const Recommendation: React.FC<RecommendationProps> = ({
 }) => {
   const images = useAltImages(); // This might be for alternative images, not the main one
   const recommendation = useRecommendation(); // This is likely where the AI description will live
+
+  useEffect(() => {
+    if (!recommendation.isLoading && recommendation.text && !recommendation.error) {
+      recommendationAudio.play();
+    }
+  }, [recommendation.isLoading, recommendation.text, recommendation.error]);
 
 
   // Helper to strip all ** from text

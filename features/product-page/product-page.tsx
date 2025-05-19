@@ -9,9 +9,9 @@ import { ProductCamera } from "./product-camera";
 import { Recommendation } from "./recommendation/recommendation";
 import { UploadImageLanding } from "./upload-image-landing";
 import { OccasionSelection } from "./occasion-selection";
-import { generateRecommendationForOccasion, useRecommendation, resetAppStore } from "./store";
+import { generateRecommendationForOccasion, resetAppStore } from "./store";
 import { resetCamera } from "../real-time-page/camera/camera-store";
-import { selfieAudio, occasionAudio } from "@/features/common/audio-player";
+import { selfieAudio, occasionAudio, } from "@/features/common/audio-player";
 
 // Simple fade-in animation wrapper
 const FadeIn: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
@@ -42,7 +42,6 @@ export const ProductPage = () => {
   const [workflowStep, setWorkflowStep] = useState<"photo" | "occasionSelection" | "recommendation">("photo");
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [selectedoccasionSelection, setSelectedoccasionSelection] = useState<string | null>(null);
-  // const { isLoading: isRecommendationLoading } = useImageDescription(); // Get loading state
 
   // Play the appropriate audio when workflow step changes
   useEffect(() => {
@@ -126,7 +125,6 @@ export const ProductPage = () => {
         )}
 
       </div>
-      {/* <HomeAppBar /> */}
     </div>
   );
 };

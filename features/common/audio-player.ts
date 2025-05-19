@@ -67,4 +67,7 @@ export function createAudioPlayer(audioPath: string): AudioPlayer {
 export const welcomeAudio = new AudioPlayer("/audio-welcome.wav");
 export const selfieAudio = new AudioPlayer("/audio-selfie.wav");
 export const occasionAudio = new AudioPlayer("/audio-occasion.wav");
+export const recommendationAudio = new AudioPlayer("/audio-recommendation.wav");
 export const cameraClickAudio = new AudioPlayer("/audio-shutter.mp3");
+export const micOnAudio = new AudioPlayer("/mic-on.wav");
+export const micOffAudio = new AudioPlayer("/mic-off.wav");

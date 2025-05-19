@@ -2,10 +2,11 @@
 
 import { exampleOccasions } from "./occasion-examples";
 import { VoiceIcon } from "../ui/app-icons";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import * as motion from "motion/react-client";
 import { startRecognition, stopRecognition, initSpeechConfig } from "../common/speech-to-text";
 import { useSpeechInput, resetSpeechInput } from "./store";
+import { micOnAudio, micOffAudio } from "../common/audio-player";
 
 interface OccasionSelectionProps {
   onSelectOccasion: (dressType: string) => void;
@@ -25,20 +26,25 @@ export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
 
   // Handler for single tap to start/cancel recognition
   const handleVoiceTap = async () => {
+    // Recognition start/stop takes a bit initially, introduce a delay
+    await new Promise(resolve => setTimeout(resolve, 750));
+
     if (!isListening) {
+      micOnAudio.play();
       setIsListening(true);
       setIsPulsating(true);
       // resetSpeechInput();
       console.log("Starting speech recognition...");
       await startRecognition();
     } else {
+      micOffAudio.play();
       setIsListening(false);
       setIsPulsating(false);
       stopRecognition();
-      // Optionally, handle the speech input here
-      // if (speechInput && speechInput.length > 2) {
-      //   onSelectOccasion(speechInput);
-      // }
+      console.log
+      if (speechInput && speechInput.length > 10) {
+        onSelectOccasion(speechInput);
+      }
     }
   };
 
@@ -94,7 +100,7 @@ export const OccasionSelection: React.FC<OccasionSelectionProps> = ({
             {isPulsating ? (
               <>
                 Listening... <br />
-                Tap again to submit
+                Tap again to send
               </>
             ) : (
               "Tap to start listening"

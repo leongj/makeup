@@ -10,7 +10,7 @@ interface Props extends PropsWithChildren {
 export const AppBar = (props: Props) => {
   const { section, children } = props;
   return (
-    <div className="fixed left-0 top-0 w-full flex justify-center p-4  ">
+    <div className="fixed left-0 top-0 w-full flex justify-center p-4 z-50 ">
       <motion.div
         layout
         initial={{ opacity: 0, y: 45 }}
