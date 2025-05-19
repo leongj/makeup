@@ -149,13 +149,15 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
               )}
             </div>
             {/* TEST button below the camera */}
-            <button
-              type="button"
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
-              onClick={handleTestCapture}
-            >
-              TEST
-            </button>
+            {process.env.NODE_ENV === 'development' && (
+              <button
+                type="button"
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+                onClick={handleTestCapture}
+              >
+                TEST
+              </button>
+            )}
           </div>
         )}
       </div>
