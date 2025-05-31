@@ -54,6 +54,7 @@ export const LandingPage = () => {
         animate={{ opacity: 1, y: 0, scale: [1.7, 1], rotate: 20 }} // Changed rotate to 45
         transition={{ delay: 0.2 }}
         src="/icon-crop.png"
+        alt="Lipstick icon"
         className="size-24 inline-block object-contain"
       />
       <div className="flex gap-3 flex-col text-balance">
@@ -82,6 +83,12 @@ export const LandingPage = () => {
 };
 
 export const Links = () => {
+  const router = useRouter();
+
+  const handleStartClick = () => {
+    router.push("/product");
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-2 py-6 text-center">
       <motion.p
@@ -92,14 +99,18 @@ export const Links = () => {
       >
         Let's find your perfect colour
       </motion.p>
-      <motion.p
+      <motion.div
         initial={{ opacity: 1, clipPath: "inset(0 100% 0 0)" }}
         animate={{ opacity: 1, clipPath: "inset(0 0 0 0)" }}
         transition={{ delay: 1.2 }}
-        className="text-xl text-red-800"
       >
-        Tap anywhere to start <ArrowRight className="inline" />
-      </motion.p>
+        <button
+          onClick={handleStartClick}
+          className="px-6 py-3 text-xl bg-red-600 hover:bg-red-700 text-white rounded-full transition-all duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+        >
+          Tap to start <ArrowRight className="inline ml-2" />
+        </button>
+      </motion.div>
     </div>
   );
 };
