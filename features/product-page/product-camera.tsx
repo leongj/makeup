@@ -129,6 +129,7 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
               <Webcam
                 ref={webcamRef}
                 className="rounded-3xl"
+                style={{ transform: "scaleX(-1)" }} // mirror for selfie mode
                 videoConstraints={{
                   // facingMode: facingMode,
                   facingMode: { exact: "user" },
