@@ -99,7 +99,7 @@ export const ProductPage = () => {
                   transition={{ delay: 0.5 }}
                   className="text-lg text-red-800"
                 >
-                  (Tap the screen to take a picture)
+                  (Tap the camera to take a picture)
                 </motion.p>
               </div>
 

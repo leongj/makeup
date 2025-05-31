@@ -104,6 +104,7 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
               src={displayImg}
               alt="captured image"
               className="rounded-3xl"
+              style={{ transform: "scaleX(-1)" }}
             />
             <div className="absolute top-0 right-0 p-2">
               <motion.button
@@ -122,8 +123,10 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
           </div>
         ) : (
           <div className="relative flex flex-col items-center">
-            <div
-              className="relative cursor-pointer"
+            <button
+              type="button"
+              className="relative cursor-pointer rounded-3xl p-0 border-0 bg-transparent focus:outline-none"
+              aria-label="Activate camera"
               onClick={handleCapture}
             >
               <Webcam
@@ -148,7 +151,7 @@ export const ProductCamera: React.FC<ProductCameraProps> = ({ onPhotoCaptured })
                   style={{ background: "white" }}
                 />
               )}
-            </div>
+            </button>
             {/* TEST button below the camera */}
             {process.env.NODE_ENV === 'development' && (
               <button
